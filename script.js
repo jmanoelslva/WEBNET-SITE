@@ -1,36 +1,47 @@
 // ===== Configuração da WebNet — edite aqui =====
-const WHATSAPP = "5500000000000"; // DDI + DDD + número, só dígitos
+// WhatsApp, links dos apps e da Área do Cliente ficam em config.js.
 
 // CEPs atendidos (prefixos). Propriá-SE usa CEP único 49940-000.
 // Para incluir povoados ou cidades vizinhas, acrescente os prefixos aqui.
 const CEPS_ATENDIDOS = ["49940"];
 
+// Incluso em todos os planos (aparece no seletor do topo)
+const INCLUSO = ["Wi-Fi incluso", "Instalação grátis", "Sem limite de consumo"];
+
+// Planos residenciais ativos no sistema em 30/09/2026.
+// preco em reais; extras = benefícios próprios do plano, além do INCLUSO.
 const PLANOS = [
   {
-    mega: 300, preco: 79, unidade: "Mega",
-    para: "Para 1 a 3 pessoas: streaming em HD, redes sociais e home office.",
-    extras: ["Wi-Fi dual band", "Instalação grátis", "Sem limite de consumo"],
+    mega: 150, preco: 64.9, unidade: "Mega",
+    para: "Para 1 a 2 pessoas: redes sociais, estudo e vídeos em HD.",
+    extras: [],
   },
   {
-    mega: 500, preco: 99, unidade: "Mega", destaque: "Mais contratado",
+    mega: 300, preco: 74.9, unidade: "Mega", destaque: "Mais contratado",
+    para: "Para 2 a 4 pessoas: streaming em HD, home office e chamadas de vídeo.",
+    extras: [],
+  },
+  {
+    mega: 500, preco: 84.9, unidade: "Mega",
     para: "Para 4 a 6 pessoas: vídeo em 4K, chamadas e jogos ao mesmo tempo.",
-    extras: ["Roteador Wi-Fi 6", "Instalação grátis", "Sem limite de consumo"],
+    extras: [],
   },
   {
-    mega: 700, preco: 129, unidade: "Mega",
+    mega: 600, preco: 94.9, unidade: "Mega",
     para: "Para casas cheias e muitos aparelhos, incluindo câmeras e TV smart.",
-    extras: ["Roteador Wi-Fi 6", "1 repetidor mesh", "Suporte prioritário"],
+    extras: [],
   },
   {
-    mega: 1, preco: 169, unidade: "Giga",
+    mega: 800, preco: 99.9, unidade: "Mega",
     para: "Para quem trabalha com arquivos pesados, transmite ao vivo ou joga online.",
-    extras: ["Roteador Wi-Fi 6", "2 repetidores mesh", "Suporte prioritário"],
+    extras: [],
   },
 ];
 // ===============================================
 
-const waLink = (msg) => `https://wa.me/${WHATSAPP}?text=${encodeURIComponent(msg)}`;
 const nomePlano = (p) => `${p.mega} ${p.unidade}`;
+const reais = (v) => Math.floor(v);
+const centavos = (v) => String(Math.round((v % 1) * 100)).padStart(2, "0");
 
 // Seletor do topo
 const speeds = document.querySelector(".picker__speeds");
@@ -45,9 +56,10 @@ function escolher(i, focar) {
   });
   el("pk-speed").textContent = p.mega;
   el("pk-unit").textContent = p.unidade;
-  el("pk-price").textContent = p.preco;
+  el("pk-price").textContent = reais(p.preco);
+  el("pk-cents").textContent = `,${centavos(p.preco)}`;
   el("pk-fit").textContent = p.para;
-  el("pk-perks").innerHTML = p.extras.map((e) => `<li>${e}</li>`).join("");
+  el("pk-perks").innerHTML = [...p.extras, ...INCLUSO].map((e) => `<li>${e}</li>`).join("");
   el("pk-cta").href = waLink(`Olá! Quero contratar o plano de ${nomePlano(p)} da WebNet.`);
   el("pk-cta").textContent = `Contratar ${nomePlano(p)} pelo WhatsApp`;
   [el("pk-speed").parentElement, el("pk-price").parentElement].forEach((n) => {
@@ -76,9 +88,9 @@ el("plans-grid").innerHTML = PLANOS.map((p) => `
     ${p.destaque ? `<span class="plan__tag">${p.destaque}</span>` : ""}
     <h3 class="plan__speed">${p.mega}<small>${p.unidade}</small></h3>
     <p class="plan__for">${p.para}</p>
-    <p class="plan__price">R$ ${p.preco},90 <small>/mês</small></p>
-    <ul>${p.extras.map((e) => `<li>${e}</li>`).join("")}</ul>
-    <a class="btn btn--ghost" href="${waLink(`Olá! Quero contratar o plano de ${nomePlano(p)} da WebNet.`)}">Contratar ${nomePlano(p)}</a>
+    <p class="plan__price">R$ ${reais(p.preco)},${centavos(p.preco)} <small>/mês</small></p>
+    ${p.extras.length ? `<ul>${p.extras.map((e) => `<li>${e}</li>`).join("")}</ul>` : ""}
+    <a class="btn btn--ghost" href="${waLink(`Olá! Quero contratar o plano de ${nomePlano(p)} da WebNet.`)}" aria-label="Contratar ${nomePlano(p)}">Contratar</a>
   </article>`).join("");
 
 // Consulta de CEP
@@ -113,3 +125,118 @@ menuBtn.addEventListener("click", () => {
 menu.addEventListener("click", (e) => { if (e.target.tagName === "A") { menu.hidden = true; menuBtn.setAttribute("aria-expanded", "false"); } });
 
 el("year").textContent = new Date().getFullYear();
+
+// Carrossel de novidades
+// 1. Tenta ler a listagem da pasta fotos/ direto do servidor (nginx "autoindex", Apache "Indexes"
+//    ou servidor local), assim basta enviar a imagem para a pasta.
+// 2. Se o servidor não listar a pasta, usa a lista de galeria.js.
+// Legendas e botões opcionais sempre vêm de galeria.js, pelo nome do arquivo.
+const FORMATOS_IMAGEM = /\.(jpe?g|png|webp|gif|avif|svg|bmp)$/i;
+
+async function listarFotos() {
+  const base = typeof GALERIA !== "undefined" ? GALERIA : [];
+  const porArquivo = new Map(base.map((g) => [g.imagem.split("/").pop(), g]));
+  let arquivos = null;
+  try {
+    const r = await fetch("fotos/", { headers: { Accept: "application/json, text/html" }, cache: "no-store" });
+    if (r.ok) {
+      const tipo = r.headers.get("content-type") || "";
+      if (tipo.includes("json")) {
+        // nginx: autoindex_format json -> [{ name, type, mtime }]
+        arquivos = (await r.json())
+          .filter((f) => f.type === "file" && FORMATOS_IMAGEM.test(f.name))
+          .sort((a, b) => new Date(b.mtime) - new Date(a.mtime))
+          .map((f) => f.name);
+      } else if (tipo.includes("html")) {
+        // listagem em HTML (Apache, nginx em HTML, http-server)
+        const doc = new DOMParser().parseFromString(await r.text(), "text/html");
+        arquivos = [...new Set([...doc.querySelectorAll("a[href]")]
+          .map((a) => decodeURIComponent(a.getAttribute("href").split(/[?#]/)[0].split("/").pop()))
+          .filter((n) => FORMATOS_IMAGEM.test(n)))];
+        // sem data na listagem: primeiro a ordem de galeria.js, depois as novas por nome
+        const ordem = [...porArquivo.keys()];
+        arquivos.sort((a, b) => {
+          const ia = ordem.indexOf(a), ib = ordem.indexOf(b);
+          if (ia >= 0 && ib >= 0) return ia - ib;
+          if (ia >= 0 || ib >= 0) return ia >= 0 ? 1 : -1;
+          return b.localeCompare(a, "pt-BR", { numeric: true });
+        });
+      }
+    }
+  } catch (_) { /* sem listagem: segue com galeria.js */ }
+
+  if (!arquivos || !arquivos.length) return base;
+  return arquivos.map((nome) => porArquivo.get(nome) || { imagem: `fotos/${encodeURIComponent(nome)}`, alt: "Novidade da WebNet" });
+}
+
+listarFotos().then(function carrossel(itens) {
+  const secao = el("novidades");
+  const track = el("news-track");
+  const dots = el("news-dots");
+  if (!secao || !itens.length) { if (secao) secao.hidden = true; return; }
+
+  const esc = (s = "") => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+  const destino = (link) => (link === "whatsapp" ? waLink("Olá! Vi uma novidade no site da WebNet.") : link);
+
+  // Qualquer proporção de imagem: a foto aparece inteira e uma cópia desfocada preenche o fundo
+  track.innerHTML = itens.map((g, i) => {
+    const legenda = g.titulo || g.texto || g.link;
+    const lazy = i ? ' loading="lazy"' : "";
+    return `
+    <li class="slide${legenda ? "" : " slide--sem-legenda"}" role="group" aria-roledescription="slide" aria-label="${i + 1} de ${itens.length}">
+      <img class="slide__fundo" src="${esc(g.imagem)}" alt=""${lazy}>
+      <img class="slide__foto" src="${esc(g.imagem)}" alt="${esc(g.alt || "")}"${lazy}>
+      ${legenda ? `<div class="slide__caption">
+        ${g.titulo ? `<h3>${esc(g.titulo)}</h3>` : ""}
+        ${g.texto ? `<p>${esc(g.texto)}</p>` : ""}
+        ${g.link ? `<a class="btn btn--lime" href="${esc(destino(g.link))}"${g.link === "whatsapp" || /^https?:/.test(g.link) ? ' target="_blank" rel="noopener"' : ""}>${esc(g.botao || "Saiba mais")}</a>` : ""}
+      </div>` : ""}
+    </li>`;
+  }).join("");
+
+  dots.innerHTML = itens.map((_, i) => `<button type="button" aria-label="Ir para o slide ${i + 1}"></button>`).join("");
+  const slides = [...track.children];
+  const botoes = [...dots.children];
+  let atual = 0;
+
+  const ir = (i) => {
+    atual = (i + itens.length) % itens.length;
+    track.scrollTo({ left: atual * track.clientWidth, behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
+  };
+  const marcar = () => {
+    atual = Math.round(track.scrollLeft / track.clientWidth);
+    botoes.forEach((b, j) => b.setAttribute("aria-current", j === atual));
+  };
+
+  secao.querySelectorAll(".news__arrow").forEach((b) => b.addEventListener("click", () => ir(atual + Number(b.dataset.dir))));
+  botoes.forEach((b, j) => b.addEventListener("click", () => ir(j)));
+  track.addEventListener("scroll", () => requestAnimationFrame(marcar), { passive: true });
+  track.addEventListener("keydown", (e) => {
+    if (e.key === "ArrowRight") { e.preventDefault(); ir(atual + 1); }
+    if (e.key === "ArrowLeft") { e.preventDefault(); ir(atual - 1); }
+  });
+  track.tabIndex = 0;
+  marcar();
+
+  if (itens.length < 2) { secao.querySelector(".news__controls").hidden = true; dots.hidden = true; }
+
+  // Troca automática: pausa com mouse em cima, foco, toque ou aba escondida
+  const segundos = typeof GALERIA_AUTOPLAY === "number" ? GALERIA_AUTOPLAY : 0;
+  if (segundos > 0 && itens.length > 1 && !matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    let pausado = false;
+    const pausar = () => (pausado = true);
+    const seguir = () => (pausado = false);
+    secao.addEventListener("mouseenter", pausar);
+    secao.addEventListener("mouseleave", seguir);
+    secao.addEventListener("focusin", pausar);
+    secao.addEventListener("focusout", seguir);
+    secao.addEventListener("touchstart", pausar, { passive: true });
+    setInterval(() => { if (!pausado && !document.hidden) ir(atual + 1); }, segundos * 1000);
+  }
+});
+
+// Botões das lojas de aplicativos: sem link cadastrado, o botão leva ao WhatsApp
+[["app-ios", APP_IOS, "iPhone"], ["app-android", APP_ANDROID, "Android"]].forEach(([id, url, so]) => {
+  const a = el(id);
+  if (a) a.href = url || waLink(`Olá! Quero o link do app da WebNet para ${so}.`);
+});

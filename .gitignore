@@ -4,3 +4,8 @@
 node_modules/
 Thumbs.db
 .DS_Store
+
+# Fotos do carrossel: publicadas direto no servidor, não no Git.
+# O repositório guarda só a pasta vazia (fotos/.gitkeep).
+fotos/*
+!fotos/.gitkeep
