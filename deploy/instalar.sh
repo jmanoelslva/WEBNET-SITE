@@ -292,20 +292,15 @@ ok "Permissões ajustadas (fotos/ gravável pelo grupo www-data)"
 # ---------- 5. configuração do servidor web ----------
 titulo "5. Configurando o $SERVIDOR"
 NOMES="$DOMINIO${WWW:+ $WWW}"
-# Política de conteúdo (CSP): só carrega scripts do próprio site, do VLibras (governo federal)
-# e das estatísticas GoatCounter. 'unsafe-eval'/'wasm-unsafe-eval' são exigidos pelo VLibras.
-VLB="https://vlibras.gov.br https://*.vlibras.gov.br https://cdn.jsdelivr.net"
-CSP="default-src 'self'; script-src 'self' 'unsafe-eval' 'wasm-unsafe-eval' $VLB https://gc.zgo.at; style-src 'self' 'unsafe-inline' $VLB; img-src 'self' data: blob: $VLB; font-src 'self' data: $VLB; connect-src 'self' blob: data: $VLB https://*.goatcounter.com; worker-src 'self' blob:; media-src 'self' blob: $VLB; object-src 'none'; base-uri 'self'; frame-ancestors 'self'"
+# Cabeçalhos de segurança (inclusive o CSP) ficam em deploy/seguranca-*.conf, dentro do projeto:
+# mudanças neles valem após um "webnet-atualizar", sem rodar o instalador de novo.
 SITE="webnet"; [[ "$MODO" == "teste" ]] && SITE="webnet-teste"
 
 if [[ "$SERVIDOR" == "nginx" ]]; then
   mkdir -p /etc/nginx/snippets
   cat > /etc/nginx/snippets/webnet-seguranca.conf <<EOF
 # Cabeçalhos de segurança do site da WebNet (incluídos em cada bloco do site)
-add_header X-Content-Type-Options "nosniff" always;
-add_header Referrer-Policy "strict-origin-when-cross-origin" always;
-add_header X-Frame-Options "SAMEORIGIN" always;
-add_header Content-Security-Policy "$CSP" always;
+include $DIR/deploy/seguranca-nginx.conf;
 EOF
   [[ "$MODO" == "producao" ]] && echo "add_header Strict-Transport-Security \"max-age=31536000\" always;" >> /etc/nginx/snippets/webnet-seguranca.conf
   if [[ -n "$CERT" ]]; then
@@ -429,10 +424,8 @@ $SSL_APACHE
 
     ErrorDocument 404 /404.html
 
-    Header always set X-Content-Type-Options "nosniff"
-    Header always set Referrer-Policy "strict-origin-when-cross-origin"
-    Header always set X-Frame-Options "SAMEORIGIN"
-    Header always set Content-Security-Policy "$CSP"
+    # Cabeçalhos de segurança e CSP (arquivo do projeto, atualizado pelo webnet-atualizar)
+    Include $DIR/deploy/seguranca-apache.conf
     $( [[ "$MODO" == "producao" ]] && echo 'Header always set Strict-Transport-Security "max-age=31536000"' || echo '# HSTS só na instalação definitiva' )
 
     # Páginas: sempre conferidas com o servidor, para mostrar a versão nova após um deploy

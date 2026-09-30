@@ -7,6 +7,17 @@ e este projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR
 
 ## [Unreleased]
 
+## [0.5.1] - 2026-09-30
+
+### Corrigido
+
+- Tradutor de Libras (VLibras) abria o painel, mas o avatar não carregava: o CSP bloqueava o quadro (iframe) de vlibras.gov.br. As estatísticas externas do próprio VLibras (PostHog) continuam bloqueadas.
+
+### Alterado
+
+- Cabeçalhos de segurança e CSP passam a ficar em `deploy/seguranca-apache.conf` e `deploy/seguranca-nginx.conf`, dentro do projeto: ajustes futuros valem com um `webnet-atualizar`, sem rodar o instalador.
+- `webnet-atualizar` avisa quando a configuração do servidor web tem erro e mantém a configuração anterior no ar.
+
 ## [0.5.0] - 2026-09-30
 
 ### Adicionado
@@ -147,7 +158,8 @@ e este projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR
 - Dados da empresa no rodapé: razão social, CNPJ 13.094.761/0001-00, endereço na Praça Fausto Cardoso, 90, Propriá-SE, e e-mail gerente@webnetprovedor.com.
 - Layout responsivo para celular, tablet e computador, com navegação por teclado e suporte a movimento reduzido.
 
-[Unreleased]: https://github.com/jmanoelslva/WEBNET-SITE/compare/v0.5.0...HEAD
+[Unreleased]: https://github.com/jmanoelslva/WEBNET-SITE/compare/v0.5.1...HEAD
+[0.5.1]: https://github.com/jmanoelslva/WEBNET-SITE/compare/v0.5.0...v0.5.1
 [0.5.0]: https://github.com/jmanoelslva/WEBNET-SITE/compare/v0.4.0...v0.5.0
 [0.4.0]: https://github.com/jmanoelslva/WEBNET-SITE/compare/v0.3.0...v0.4.0
 [0.3.0]: https://github.com/jmanoelslva/WEBNET-SITE/compare/v0.2.1...v0.3.0

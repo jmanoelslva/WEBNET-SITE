@@ -26,6 +26,7 @@ Site institucional da **WebNet Conexão em Alta Velocidade**, provedor de intern
 | `DEPLOY.md` | Publicação em servidor Debian (nginx ou Apache) |
 | `deploy/instalar.sh` | Instalador para o servidor: servidor web, domínio e certificado HTTPS |
 | `deploy/atualizar.sh` | Deploy de novas versões do GitHub (comando `webnet-atualizar`) |
+| `deploy/seguranca-apache.conf`, `deploy/seguranca-nginx.conf` | Cabeçalhos de segurança e CSP incluídos pelo servidor web |
 | `deploy/carimbar.sh` | Aplica a versão nos links de CSS/JS e o endereço do site a cada deploy |
 | `deploy/otimizar-fotos.sh` | Converte fotos pesadas em WEBP (executado a cada 5 minutos no servidor) |
 | `deploy/og-imagem.html` | Fonte da imagem de compartilhamento `img/og-webnet.png` |

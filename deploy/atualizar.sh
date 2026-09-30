@@ -63,9 +63,9 @@ bash "$DIR/deploy/carimbar.sh" "$DIR" "${ENDERECO:-https://$DOMINIO}"
 
 # Recarrega o servidor web (só por garantia; arquivos estáticos já valem na hora)
 if [[ "${SERVIDOR:-nginx}" == "nginx" ]]; then
-  nginx -t >/dev/null 2>&1 && systemctl reload nginx
+  if nginx -t >/dev/null 2>&1; then systemctl reload nginx; else echo "${AMARELO}  ! Configuração do nginx com erro (veja: nginx -t). O servidor segue com a configuração anterior.${FIM}"; fi
 else
-  apache2ctl configtest >/dev/null 2>&1 && systemctl reload apache2
+  if apache2ctl configtest >/dev/null 2>&1; then systemctl reload apache2; else echo "${AMARELO}  ! Configuração do Apache com erro (veja: apache2ctl configtest). O servidor segue com a configuração anterior.${FIM}"; fi
 fi
 
 if [[ "$ANTES" == "$DEPOIS" ]]; then
