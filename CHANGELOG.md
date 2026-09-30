@@ -7,6 +7,19 @@ e este projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR
 
 ## [Unreleased]
 
+## [0.2.1] - 2026-09-30
+
+### Alterado
+
+- Destaques do topo: suporte pelo WhatsApp, pelo app ou na loja, sem horário fixo; app WebNet SE com faturas, 2ª via e chamados.
+- Bloco "Fale com a WebNet" sem horário de atendimento.
+
+### Removido
+
+- Horário "todos os dias, das 8h às 22h", que não correspondia ao atendimento real.
+- Menção a "upload de até 50% do download".
+- Aviso de "desconto de pontualidade" abaixo dos planos.
+
 ## [0.2.0] - 2026-09-30
 
 ### Adicionado
@@ -57,6 +70,7 @@ e este projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR
 - Dados da empresa no rodapé: razão social, CNPJ 13.094.761/0001-00, endereço na Praça Fausto Cardoso, 90, Propriá-SE, e e-mail gerente@webnetprovedor.com.
 - Layout responsivo para celular, tablet e computador, com navegação por teclado e suporte a movimento reduzido.
 
-[Unreleased]: https://github.com/jmanoelslva/WEBNET-SITE/compare/v0.2.0...HEAD
+[Unreleased]: https://github.com/jmanoelslva/WEBNET-SITE/compare/v0.2.1...HEAD
+[0.2.1]: https://github.com/jmanoelslva/WEBNET-SITE/compare/v0.2.0...v0.2.1
 [0.2.0]: https://github.com/jmanoelslva/WEBNET-SITE/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/jmanoelslva/WEBNET-SITE/releases/tag/v0.1.0
