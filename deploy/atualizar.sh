@@ -12,6 +12,12 @@
 # =============================================================================
 set -euo pipefail
 
+# Roda a partir de uma cópia temporária: o próprio script pode ser atualizado pelo git durante a execução
+if [[ -z "${WEBNET_COPIA:-}" && -f "${BASH_SOURCE[0]}" ]]; then
+  COPIA="$(mktemp)"; cp "${BASH_SOURCE[0]}" "$COPIA"
+  WEBNET_COPIA=1 WEBNET_ORIGEM="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)" exec bash "$COPIA" "$@"
+fi
+
 CONF="/etc/webnet-site.conf"
 VERDE=$'\e[1;32m'; AMARELO=$'\e[1;33m'; VERMELHO=$'\e[1;31m'; FIM=$'\e[0m'
 [[ -t 1 ]] || { VERDE=""; AMARELO=""; VERMELHO=""; FIM=""; }
@@ -51,6 +57,9 @@ mkdir -p "$DIR/fotos"
 find "$DIR" -path "$DIR/.git" -prune -o -path "$DIR/fotos" -prune -o -type d -exec chmod 755 {} +
 find "$DIR" -path "$DIR/.git" -prune -o -path "$DIR/fotos" -prune -o -type f -exec chmod 644 {} +
 chgrp www-data "$DIR/fotos"; chmod 2775 "$DIR/fotos"
+
+# Versão nos links de CSS/JS e endereço do site (prévia no WhatsApp, SEO)
+bash "$DIR/deploy/carimbar.sh" "$DIR" "${ENDERECO:-https://$DOMINIO}"
 
 # Recarrega o servidor web (só por garantia; arquivos estáticos já valem na hora)
 if [[ "${SERVIDOR:-nginx}" == "nginx" ]]; then

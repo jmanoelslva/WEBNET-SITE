@@ -11,6 +11,47 @@ const APP_ANDROID = "https://play.google.com/store/apps/details?id=br.com.webnet
 // Se ficar vazio, o botão "Continuar no navegador" abre o WhatsApp.
 const AREA_CLIENTE_WEB = "https://webnetse.com.br/client";
 
+// ===== Rodapé =====
+// Contrato de prestação de serviço: coloque o PDF na pasta docs/ e informe o caminho,
+// ex.: "docs/contrato-webnet.pdf". Vazio = o link não aparece.
+const CONTRATO_URL = "";
+// "Trabalhe conosco": abre um e-mail já com o assunto preenchido.
+const TRABALHE_CONOSCO_EMAIL = "gerente@webnetprovedor.com";
+
+// ===== Aviso no topo do site (manutenção, instabilidade ou comunicado) =====
+// Para ligar, use ativo: true. O aviso some sozinho depois da data em "ate".
+// tipo: "manutencao" (amarelo), "instabilidade" (vermelho) ou "info" (azul).
+const AVISO = {
+  ativo: false,
+  tipo: "manutencao",
+  texto: "Manutenção programada em Telha nesta quinta (02/10), das 14h às 16h. A internet pode oscilar nesse período.",
+  ate: "2026-10-02T16:00",   // data e hora de Brasília em que o aviso deixa de aparecer ("" = sem prazo)
+};
+
+// ===== Teste de velocidade =====
+// Endereço do teste de velocidade. Se instalar o LibreSpeed no servidor da WebNet
+// (veja DEPLOY.md), troque por ele, ex.: "https://velocidade.webnetse.com.br".
+const TESTE_VELOCIDADE_URL = "https://fast.com/pt/";
+
+// ===== Estatísticas de acesso (sem cookies) =====
+// Opcional. Crie uma conta gratuita em https://www.goatcounter.com e informe só o código,
+// ex.: "webnet" para https://webnet.goatcounter.com. Vazio = nenhuma estatística é coletada.
+const ESTATISTICAS_GOATCOUNTER = "";
+
+// ===== Planos empresariais =====
+// ATENÇÃO: textos de EXEMPLO. Ajuste aos serviços reais ou use ativo: false para esconder.
+const PLANOS_EMPRESA = {
+  ativo: true,
+  titulo: "Internet para empresas",
+  descricao: "Soluções para comércios, escritórios e empresas de Propriá e região, com atendimento dedicado.",
+  itens: [
+    { titulo: "Planos sob medida",       texto: "Velocidade dimensionada para a sua operação." },
+    { titulo: "Atendimento prioritário", texto: "Canal direto com o suporte técnico." },
+    { titulo: "IP fixo",                 texto: "Para câmeras, servidores e acesso remoto (consulte)." },
+    { titulo: "Link dedicado",           texto: "Banda garantida para quem não pode parar (consulte)." },
+  ],
+};
+
 // ===== SVA de e-books =====
 // ATENÇÃO: nome, números e textos abaixo são FICTÍCIOS, só para mostrar a estrutura.
 // Troque pelos dados do fornecedor contratado. Para esconder tudo, use ativo: false.

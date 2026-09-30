@@ -7,6 +7,38 @@ e este projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR
 
 ## [Unreleased]
 
+## [0.4.0] - 2026-09-30
+
+### Adicionado
+
+- Página de Termos de Uso (`termos.html`), com link no rodapé de todas as páginas.
+- Página 404 no visual do site.
+- Prévia com imagem ao compartilhar o link no WhatsApp e nas redes sociais (`img/og-webnet.png`).
+- Dados de empresa local para o Google (Schema.org), `sitemap.xml` e `robots.txt`.
+- Botão flutuante do WhatsApp em todas as páginas.
+- "Qual plano é ideal?": teste de 3 perguntas que recomenda um plano.
+- Pré-cadastro "Quero ser cliente", enviado pelo WhatsApp sem gravar dados no site.
+- Seção de planos empresariais (textos de exemplo, em `config.js` > `PLANOS_EMPRESA`).
+- Dicas rápidas de suporte (internet caiu, Wi-Fi, lentidão, Smart TV).
+- Aviso no topo para manutenção, instabilidade ou comunicados (`config.js` > `AVISO`, desligado por padrão).
+- Estatísticas de acesso sem cookies, opcionais (GoatCounter).
+- Teste de velocidade configurável, com suporte a LibreSpeed próprio.
+- Otimização automática das fotos do carrossel no servidor (WEBP de até 1600 px).
+- Arquivo `comum.js` com os itens compartilhados entre as páginas.
+
+### Alterado
+
+- Fonte Roboto servida pelo próprio site, sem Google Fonts.
+- Rodapé: "Trabalhe conosco" abre e-mail com assunto preenchido; "Contrato de serviço" só aparece quando houver um PDF configurado.
+- Política de Privacidade atualizada: pré-cadastro, teste de plano, estatísticas sem cookies e fim do Google Fonts.
+- Instalador e `webnet-atualizar` rodam a partir de uma cópia temporária, para não serem afetados quando o próprio script é atualizado.
+
+### Corrigido
+
+- Visitantes podiam continuar vendo CSS e JS antigos por até 7 dias após uma atualização: agora os links levam a versão e as páginas não ficam em cache.
+- No nginx, cabeçalhos de segurança deixavam de ser enviados em algumas rotas.
+- Links "Contrato de serviço" e "Trabalhe conosco" do rodapé não levavam a lugar nenhum.
+
 ## [0.3.0] - 2026-09-30
 
 ### Adicionado
@@ -97,7 +129,8 @@ e este projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR
 - Dados da empresa no rodapé: razão social, CNPJ 13.094.761/0001-00, endereço na Praça Fausto Cardoso, 90, Propriá-SE, e e-mail gerente@webnetprovedor.com.
 - Layout responsivo para celular, tablet e computador, com navegação por teclado e suporte a movimento reduzido.
 
-[Unreleased]: https://github.com/jmanoelslva/WEBNET-SITE/compare/v0.3.0...HEAD
+[Unreleased]: https://github.com/jmanoelslva/WEBNET-SITE/compare/v0.4.0...HEAD
+[0.4.0]: https://github.com/jmanoelslva/WEBNET-SITE/compare/v0.3.0...v0.4.0
 [0.3.0]: https://github.com/jmanoelslva/WEBNET-SITE/compare/v0.2.1...v0.3.0
 [0.2.1]: https://github.com/jmanoelslva/WEBNET-SITE/compare/v0.2.0...v0.2.1
 [0.2.0]: https://github.com/jmanoelslva/WEBNET-SITE/compare/v0.1.0...v0.2.0

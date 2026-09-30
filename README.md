@@ -9,7 +9,11 @@ Site institucional da **WebNet Conexão em Alta Velocidade**, provedor de intern
 | `index.html` | Página inicial |
 | `privacidade.html` | Política de Privacidade (LGPD) |
 | `styles.css` | Estilos e paleta de cores (variáveis no início do arquivo) |
-| `config.js` | WhatsApp, links dos apps, endereço da Área do Cliente e SVA de e-books (`SVA_EBOOKS`) |
+| `config.js` | WhatsApp, apps, Área do Cliente, rodapé, aviso no topo, teste de velocidade, estatísticas, planos empresariais e SVA de e-books |
+| `comum.js` | Itens comuns às páginas: menu, rodapé, WhatsApp flutuante, aviso no topo e estatísticas |
+| `termos.html`, `404.html` | Termos de Uso e página de erro 404 |
+| `fontes/` | Fonte Roboto servida pelo próprio site (licença SIL OFL) |
+| `robots.txt`, `sitemap.xml` | Orientação para buscadores (endereço preenchido no deploy) |
 | `script.js` | Planos, preços e CEPs atendidos (configuração no início do arquivo) |
 | `area-cliente.js` | Janela da Área do Cliente: baixar o app ou continuar no navegador |
 | `galeria.js` | Lista de slides do carrossel (gerada por `atualizar-galeria.bat`) |
@@ -19,6 +23,9 @@ Site institucional da **WebNet Conexão em Alta Velocidade**, provedor de intern
 | `DEPLOY.md` | Publicação em servidor Debian (nginx ou Apache) |
 | `deploy/instalar.sh` | Instalador para o servidor: servidor web, domínio e certificado HTTPS |
 | `deploy/atualizar.sh` | Deploy de novas versões do GitHub (comando `webnet-atualizar`) |
+| `deploy/carimbar.sh` | Aplica a versão nos links de CSS/JS e o endereço do site a cada deploy |
+| `deploy/otimizar-fotos.sh` | Converte fotos pesadas em WEBP (executado a cada 5 minutos no servidor) |
+| `deploy/og-imagem.html` | Fonte da imagem de compartilhamento `img/og-webnet.png` |
 | `logo-marca.svg`, `webnet-logo.svg` | Logotipos usados no site |
 | `LOGO.svg`, `LOGO.png` | Arquivos originais do logotipo |
 | `appstore.webp`, `googleplay.webp` | Selos das lojas de aplicativos |

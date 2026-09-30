@@ -133,21 +133,7 @@ cidade.addEventListener("change", atualizarCobertura);
 el("cobertura-form").addEventListener("submit", (e) => e.preventDefault());
 atualizarCobertura();
 
-// WhatsApp genérico
-document.querySelectorAll("[data-wa]").forEach((a) => (a.href = waLink("Olá! Gostaria de falar com a WebNet.")));
-document.querySelectorAll("[data-wa-msg]").forEach((a) => (a.href = waLink(a.dataset.waMsg)));
-
-// Menu mobile
-const menuBtn = document.querySelector(".menu-btn");
-const menu = el("mobile-menu");
-menuBtn.addEventListener("click", () => {
-  const aberto = menuBtn.getAttribute("aria-expanded") === "true";
-  menuBtn.setAttribute("aria-expanded", !aberto);
-  menu.hidden = aberto;
-});
-menu.addEventListener("click", (e) => { if (e.target.tagName === "A") { menu.hidden = true; menuBtn.setAttribute("aria-expanded", "false"); } });
-
-el("year").textContent = new Date().getFullYear();
+// Menu do celular, ano do rodapé, links de WhatsApp e demais itens comuns ficam em comum.js
 
 // Carrossel de novidades
 // 1. Tenta ler a listagem da pasta fotos/ direto do servidor (nginx "autoindex", Apache "Indexes"
@@ -302,4 +288,89 @@ listarFotos().then(function carrossel(itens) {
   el("ebooks-passos").innerHTML = S.passos.map((p) => `<li>${p}</li>`).join("");
   el("ebooks-cta").href = waLink(`Olá! Quero um plano da WebNet com os e-books da ${S.nome}.`);
   secao.hidden = false;
+})();
+
+// Planos empresariais (config.js > PLANOS_EMPRESA)
+(function empresas() {
+  const secao = el("empresas");
+  if (!secao || typeof PLANOS_EMPRESA === "undefined" || !PLANOS_EMPRESA.ativo) return;
+  el("empresas-titulo").textContent = PLANOS_EMPRESA.titulo;
+  el("empresas-desc").textContent = PLANOS_EMPRESA.descricao;
+  el("empresas-itens").innerHTML = PLANOS_EMPRESA.itens.map((i) => `<li><strong>${i.titulo}</strong>${i.texto}</li>`).join("");
+  el("empresas-cta").href = waLink("Olá! Quero conhecer os planos da WebNet para empresas.");
+  secao.hidden = false;
+})();
+
+// Pré-cadastro "Quero ser cliente": monta a mensagem e abre o WhatsApp (nada é gravado no site)
+(function cadastro() {
+  const form = el("cadastro-form");
+  if (!form) return;
+  el("cadastro-cidade").innerHTML = `<option value="">Selecione…</option>` +
+    CIDADES_ATENDIDAS.map((c) => `<option>${c}</option>`).join("") + `<option>Outra cidade</option>`;
+  el("cadastro-plano").innerHTML = `<option>Ainda não sei</option>` + PLANOS.map((p) => `<option>${nomePlano(p)}</option>`).join("");
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const d = Object.fromEntries(new FormData(form));
+    const erro = el("cadastro-erro");
+    if (!d.nome.trim() || !d.cidade) { erro.textContent = "Preencha o nome e escolha a cidade."; return; }
+    erro.textContent = "";
+    const msg = [
+      "Olá! Quero ser cliente da WebNet.",
+      `Nome: ${d.nome.trim()}`,
+      `Cidade: ${d.cidade}`,
+      d.endereco.trim() && `Endereço: ${d.endereco.trim()}`,
+      `Plano de interesse: ${d.plano}`,
+      `Melhor horário para contato: ${d.horario}`,
+    ].filter(Boolean).join("\n");
+    window.open(waLink(msg), "_blank", "noopener");
+  });
+})();
+
+// "Qual plano é ideal?": 3 perguntas, 0 a 2 pontos cada
+(function quiz() {
+  const abrir = el("quiz-abrir");
+  if (!abrir) return;
+  const perguntas = [
+    { t: "Quantas pessoas usam a internet na sua casa?", o: ["1 ou 2", "3 ou 4", "5 ou mais"] },
+    { t: "O que vocês mais fazem na internet?", o: ["Redes sociais e vídeos", "Filmes e séries em HD ou 4K", "Jogos online, lives ou arquivos pesados"] },
+    { t: "Quantos aparelhos ficam conectados ao mesmo tempo?", o: ["Até 5", "De 6 a 10", "Mais de 10 (TVs, câmeras…)"] },
+  ];
+  // pontuação total (0–6) → posição do plano na lista, do mais leve ao mais rápido
+  const indice = (pts) => Math.min(PLANOS.length - 1, [0, 0, 1, 2, 3, 4, 4][pts]);
+  const dlg = document.createElement("dialog");
+  dlg.className = "modal quiz";
+  dlg.setAttribute("aria-labelledby", "quiz-titulo");
+  document.body.appendChild(dlg);
+  let respostas = [];
+
+  function mostrar() {
+    const i = respostas.length;
+    const fechar = `<button class="modal__fechar" type="button" aria-label="Fechar"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>`;
+    if (i < perguntas.length) {
+      const q = perguntas[i];
+      dlg.innerHTML = `${fechar}<p class="quiz__passo">Pergunta ${i + 1} de ${perguntas.length}</p>
+        <h2 id="quiz-titulo">${q.t}</h2>
+        <div class="quiz__opcoes">${q.o.map((o, n) => `<button type="button" class="quiz__opcao" data-pts="${n}">${o}</button>`).join("")}</div>`;
+      dlg.querySelectorAll(".quiz__opcao").forEach((b) => b.addEventListener("click", () => { respostas.push(+b.dataset.pts); mostrar(); }));
+      dlg.querySelector(".quiz__opcao").focus();
+    } else {
+      const p = PLANOS[indice(respostas.reduce((a, b) => a + b, 0))];
+      dlg.innerHTML = `${fechar}<p class="quiz__passo">Resultado</p>
+        <h2 id="quiz-titulo">O plano ideal para você é o de ${nomePlano(p)}</h2>
+        <div class="quiz__resultado">
+          <span class="plan__speed">${p.mega}<small>${p.unidade}</small></span>
+          <span class="plan__price">R$ ${reais(p.preco)},${centavos(p.preco)} <small>/mês</small></span>
+          <p>${p.para}</p>
+        </div>
+        <div class="quiz__acoes">
+          <a class="btn btn--lime btn--wa" target="_blank" rel="noopener" data-evento="quiz-contratar" href="${waLink(`Olá! Fiz o teste no site e quero contratar o plano de ${nomePlano(p)} da WebNet.`)}">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-whatsapp"/></svg> Contratar pelo WhatsApp</a>
+          <button type="button" class="btn btn--ghost" id="quiz-refazer">Refazer o teste</button>
+        </div>`;
+      dlg.querySelector("#quiz-refazer").addEventListener("click", () => { respostas = []; mostrar(); });
+    }
+    dlg.querySelector(".modal__fechar").addEventListener("click", () => dlg.close());
+  }
+  dlg.addEventListener("click", (e) => { if (e.target === dlg) dlg.close(); });
+  abrir.addEventListener("click", () => { respostas = []; mostrar(); dlg.showModal(); });
 })();

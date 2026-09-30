@@ -5,10 +5,39 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>WebNet — Internet fibra óptica em Propriá e região (SE)</title>
   <meta name="description" content="WebNet Conexão em Alta Velocidade: internet 100% fibra óptica em Propriá, Amparo de São Francisco, Cedro de São João, Malhada dos Bois, São Francisco e Telha (SE), com instalação rápida, Wi-Fi incluso e suporte local.">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="canonical" href="__SITE_URL__/">
+  <meta name="theme-color" content="#236085">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="pt_BR">
+  <meta property="og:site_name" content="WebNet">
+  <meta property="og:title" content="WebNet — Internet fibra em Propriá e região">
+  <meta property="og:description" content="Planos de 150 a 800 Mega, Wi-Fi incluso e suporte local em Propriá, Amparo de São Francisco, Cedro de São João, Malhada dos Bois, São Francisco e Telha (SE).">
+  <meta property="og:url" content="__SITE_URL__/">
+  <meta property="og:image" content="__SITE_URL__/img/og-webnet.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="WebNet — Internet fibra em Propriá e região">
+  <meta name="twitter:card" content="summary_large_image">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "LocalBusiness",
+    "@id": "__SITE_URL__/#empresa",
+    "name": "WebNet Conexão em Alta Velocidade",
+    "description": "Provedor de internet fibra óptica em Propriá e região.",
+    "url": "__SITE_URL__/",
+    "logo": "__SITE_URL__/logo-marca.svg",
+    "image": "__SITE_URL__/img/og-webnet.png",
+    "telephone": "+55-79-9844-1264",
+    "email": "gerente@webnetprovedor.com",
+    "taxID": "13.094.761/0001-00",
+    "address": { "@type": "PostalAddress", "streetAddress": "Praça Fausto Cardoso, 90", "addressLocality": "Propriá", "addressRegion": "SE", "postalCode": "49940-000", "addressCountry": "BR" },
+    "areaServed": [{"@type":"City","name":"Propriá - SE"},{"@type":"City","name":"Amparo de São Francisco - SE"},{"@type":"City","name":"Cedro de São João - SE"},{"@type":"City","name":"Malhada dos Bois - SE"},{"@type":"City","name":"São Francisco - SE"},{"@type":"City","name":"Telha - SE"}],
+    "sameAs": ["https://apps.apple.com/br/app/webnet-se/id6747210768", "https://play.google.com/store/apps/details?id=br.com.webnetse"]
+  }
+  </script>
   <link rel="icon" href="logo-marca.svg" type="image/svg+xml">
+  <link rel="preload" href="fontes/roboto-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -105,6 +134,10 @@
         </div>
         <div class="plans__grid" id="plans-grid"><!-- preenchido pelo script.js --></div>
         <p class="fine">Consulte as condições de instalação para o seu endereço.</p>
+        <div class="quiz-chamada">
+          <p><strong>Não sabe qual escolher?</strong> Responda 3 perguntas e veja o plano ideal para a sua casa.</p>
+          <button type="button" class="btn btn--petrol" id="quiz-abrir">Descobrir meu plano</button>
+        </div>
       </div>
     </section>
 
@@ -130,6 +163,21 @@
             Quero meu plano com e-books
           </a>
         </div>
+      </div>
+    </section>
+
+    <!-- PLANOS EMPRESARIAIS (conteúdo em config.js > PLANOS_EMPRESA) -->
+    <section id="empresas" class="empresas" aria-labelledby="empresas-titulo" hidden>
+      <div class="wrap empresas__grid">
+        <div>
+          <h2 id="empresas-titulo"></h2>
+          <p class="empresas__desc" id="empresas-desc"></p>
+          <a class="btn btn--lime btn--wa" id="empresas-cta" href="https://wa.me/557998441264" target="_blank" rel="noopener" data-evento="empresas">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-whatsapp"/></svg>
+            Falar com o comercial
+          </a>
+        </div>
+        <ul class="empresas__itens" id="empresas-itens"></ul>
       </div>
     </section>
 
@@ -181,6 +229,31 @@
       </div>
     </section>
 
+    <!-- PRÉ-CADASTRO -->
+    <section id="seja-cliente" class="cadastro" aria-labelledby="cadastro-titulo">
+      <div class="wrap cadastro__grid">
+        <div>
+          <h2 id="cadastro-titulo">Quero ser cliente</h2>
+          <p class="cadastro__desc">Preencha e envie pelo WhatsApp. Nossa equipe confirma a cobertura no seu endereço e agenda a instalação.</p>
+          <p class="fine">Seus dados não ficam guardados no site: eles vão apenas na mensagem que você enviar pelo WhatsApp.</p>
+        </div>
+        <form class="cadastro__form" id="cadastro-form" novalidate>
+          <label>Nome completo<input name="nome" autocomplete="name" required></label>
+          <label>Cidade<select name="cidade" id="cadastro-cidade" required></select></label>
+          <label>Bairro e rua<input name="endereco" autocomplete="street-address" placeholder="Ex.: Centro, Rua São José"></label>
+          <label>Plano de interesse<select name="plano" id="cadastro-plano"></select></label>
+          <label>Melhor horário para contato
+            <select name="horario"><option>Qualquer horário</option><option>Manhã</option><option>Tarde</option><option>Noite</option></select>
+          </label>
+          <p class="cadastro__erro" id="cadastro-erro" role="alert"></p>
+          <button class="btn btn--lime btn--wa" type="submit">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-whatsapp"/></svg>
+            Enviar pelo WhatsApp
+          </button>
+        </form>
+      </div>
+    </section>
+
     <!-- AJUDA -->
     <section id="ajuda" class="help">
       <div class="wrap">
@@ -197,7 +270,7 @@
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20l1.5-4A8 8 0 1 1 8 18.5z" /></svg>
             <span><strong>Suporte no WhatsApp</strong>Internet lenta ou sem sinal? Fale com o técnico.</span>
           </a>
-          <a class="help__item" href="https://fast.com/pt/" target="_blank" rel="noopener">
+          <a class="help__item" href="https://fast.com/pt/" target="_blank" rel="noopener" data-teste-velocidade>
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 15a9 9 0 0 1 18 0 M12 15l4-5 M12 15h0" /><circle cx="12" cy="15" r="1.5"/></svg>
             <span><strong>Teste de velocidade</strong>Meça sua conexão pelo cabo ou Wi-Fi.</span>
           </a>
@@ -221,6 +294,30 @@
             </a>
           </div>
         </div>
+
+        <div class="dicas">
+          <h3>Dicas rápidas</h3>
+          <div class="faq__list">
+            <details>
+              <summary>A internet caiu. O que fazer primeiro?</summary>
+              <p>Olhe as luzes do aparelho da fibra (ONU). Se a luz <strong>LOS</strong> estiver vermelha, acesa ou piscando, há um problema no cabo de fibra: não mexa nele e chame o suporte pelo WhatsApp. Se não houver luz vermelha, tire a ONU e o roteador da tomada por 30 segundos, ligue primeiro a ONU, espere 2 minutos e depois ligue o roteador.</p>
+            </details>
+            <details>
+              <summary>Como melhorar o sinal do Wi-Fi?</summary>
+              <p>Deixe o roteador em um lugar alto e no centro da casa, longe de micro-ondas, espelhos, aquários e paredes grossas. A rede de 5 GHz é mais rápida perto do roteador; a de 2,4 GHz alcança mais longe. Em casas grandes, um repetidor ajuda.</p>
+            </details>
+            <details>
+              <summary>A internet está lenta. Como saber se é a conexão?</summary>
+              <p>Faça o teste de velocidade com o aparelho perto do roteador ou ligado por cabo, com os outros aparelhos desconectados. Pelo Wi-Fi e com muitos aparelhos usando ao mesmo tempo, a velocidade medida é menor. Se o resultado continuar baixo depois de reiniciar os aparelhos, fale com o suporte.</p>
+            </details>
+            <details>
+              <summary>Como conectar a Smart TV no Wi-Fi?</summary>
+              <p>Na TV, abra Configurações, depois Rede ou Conexões, escolha Wi-Fi, selecione o nome da sua rede e digite a senha. Se a TV ficar perto do roteador, o cabo de rede deixa a imagem mais estável.</p>
+            </details>
+          </div>
+          <p class="fine">As luzes e os menus podem variar conforme o modelo do aparelho.</p>
+        </div>
+
       </div>
     </section>
 
@@ -292,7 +389,12 @@
       </div>
       <div>
         <h3>Institucional</h3>
-        <p><a href="#">Contrato de serviço</a><br><a href="privacidade.html">Política de privacidade</a><br><a href="#">Trabalhe conosco</a></p>
+        <ul class="footer__links">
+          <li><a href="#" data-contrato target="_blank" rel="noopener">Contrato de serviço</a></li>
+          <li><a href="privacidade.html">Política de privacidade</a></li>
+          <li><a href="termos.html">Termos de uso</a></li>
+          <li><a href="#" data-trabalhe>Trabalhe conosco</a></li>
+        </ul>
       </div>
     </div>
     <div class="wrap footer__legal">© <span id="year"></span> WebNet Conexão em Alta Velocidade · CNPJ 13.094.761/0001-00 · Propriá – SE</div>
@@ -300,6 +402,7 @@
 
   <script src="config.js"></script>
   <script src="galeria.js"></script>
+  <script src="comum.js"></script>
   <script src="script.js"></script>
   <script src="area-cliente.js"></script>
 </body>

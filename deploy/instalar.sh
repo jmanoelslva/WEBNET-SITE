@@ -19,6 +19,12 @@
 # =============================================================================
 set -euo pipefail
 
+# Roda a partir de uma cópia temporária: o próprio script pode ser atualizado pelo git durante a execução
+if [[ -z "${WEBNET_COPIA:-}" && -f "${BASH_SOURCE[0]}" ]]; then
+  COPIA="$(mktemp)"; cp "${BASH_SOURCE[0]}" "$COPIA"
+  WEBNET_COPIA=1 WEBNET_ORIGEM="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)" exec bash "$COPIA" "$@"
+fi
+
 REPO_PADRAO="https://github.com/jmanoelslva/WEBNET-SITE.git"
 BRANCH_PADRAO="main"
 DIR_PADRAO="/var/www/webnet"
@@ -223,7 +229,7 @@ sim_nao "Confirmar e instalar?" "s" || erro "Instalação cancelada."
 # ---------- 3. pacotes ----------
 titulo "3. Instalando pacotes"
 export DEBIAN_FRONTEND=noninteractive
-PACOTES=(git ca-certificates)
+PACOTES=(git ca-certificates imagemagick)
 [[ "$MODO" == "producao" ]] && PACOTES+=(certbot)
 if [[ "$SERVIDOR" == "nginx" ]]; then
   PACOTES+=(nginx);   [[ "$MODO" == "producao" ]] && PACOTES+=(python3-certbot-nginx)
@@ -289,6 +295,13 @@ NOMES="$DOMINIO${WWW:+ $WWW}"
 SITE="webnet"; [[ "$MODO" == "teste" ]] && SITE="webnet-teste"
 
 if [[ "$SERVIDOR" == "nginx" ]]; then
+  mkdir -p /etc/nginx/snippets
+  cat > /etc/nginx/snippets/webnet-seguranca.conf <<'EOF'
+# Cabeçalhos de segurança do site da WebNet (incluídos em cada bloco do site)
+add_header X-Content-Type-Options "nosniff" always;
+add_header Referrer-Policy "strict-origin-when-cross-origin" always;
+add_header X-Frame-Options "SAMEORIGIN" always;
+EOF
   if [[ -n "$CERT" ]]; then
     LISTEN="    listen $PORTA ssl;
     listen [::]:$PORTA ssl;
@@ -313,31 +326,39 @@ $LISTEN
     gzip on;
     gzip_types text/css application/javascript image/svg+xml application/json;
 
-    add_header X-Content-Type-Options "nosniff" always;
-    add_header Referrer-Policy "strict-origin-when-cross-origin" always;
-    add_header X-Frame-Options "SAMEORIGIN" always;
+    error_page 404 /404.html;
+    include snippets/webnet-seguranca.conf;
+
+    # Arquivos internos do projeto não são publicados (vêm antes das demais regras)
+    location ~ /\.(?!well-known) { deny all; }
+    location ^~ /deploy/ { deny all; }
+    location ~* \.(md|bat|sh)\$ { deny all; }
+    location = /gerar-galeria.js { deny all; }
 
     location / {
         try_files \$uri \$uri/ =404;
+    }
+
+    # Páginas: sempre conferidas com o servidor, para mostrar a versão nova após um deploy
+    location ~* \.html\$ {
+        include snippets/webnet-seguranca.conf;
+        add_header Cache-Control "no-cache";
     }
 
     # Carrossel: o site lê a lista de imagens desta pasta
     location /fotos/ {
         autoindex on;
         autoindex_format json;
+        include snippets/webnet-seguranca.conf;
         add_header Cache-Control "no-cache";
     }
 
-    location ~* \.(css|js|svg|png|jpe?g|webp|gif|avif|ico)\$ {
-        expires 7d;
+    # CSS e JS levam ?v=versão a cada deploy, então podem ficar em cache
+    location ~* \.(css|js|svg|png|jpe?g|webp|gif|avif|ico|woff2)\$ {
+        expires 30d;
+        include snippets/webnet-seguranca.conf;
         add_header Cache-Control "public";
     }
-
-    # Arquivos internos do projeto não são publicados
-    location ~ /\.(?!well-known) { deny all; }
-    location ^~ /deploy/ { deny all; }
-    location ~* \.(md|bat|sh)\$ { deny all; }
-    location = /gerar-galeria.js { deny all; }
 }
 EOF
   ln -sf "/etc/nginx/sites-available/$SITE" "/etc/nginx/sites-enabled/$SITE"
@@ -393,24 +414,34 @@ $SSL_APACHE
     </LocationMatch>
 
     # Arquivos internos do projeto não são publicados
-    <DirectoryMatch "^$DIR/(\.git|deploy)">
+    <DirectoryMatch "^$DIR/(\.git|deploy|fotos/\.originais)">
         Require all denied
     </DirectoryMatch>
     <FilesMatch "(\.(md|bat|sh)|^gerar-galeria\.js|^\.git.*)\$">
         Require all denied
     </FilesMatch>
 
+    ErrorDocument 404 /404.html
+
     Header always set X-Content-Type-Options "nosniff"
     Header always set Referrer-Policy "strict-origin-when-cross-origin"
     Header always set X-Frame-Options "SAMEORIGIN"
 
+    # Páginas: sempre conferidas com o servidor, para mostrar a versão nova após um deploy
+    <FilesMatch "\.html\$">
+        Header set Cache-Control "no-cache"
+    </FilesMatch>
+
+    # CSS e JS levam ?v=versão a cada deploy, então podem ficar em cache
     ExpiresActive On
-    ExpiresByType text/css "access plus 7 days"
-    ExpiresByType application/javascript "access plus 7 days"
-    ExpiresByType image/svg+xml "access plus 7 days"
-    ExpiresByType image/png "access plus 7 days"
-    ExpiresByType image/jpeg "access plus 7 days"
-    ExpiresByType image/webp "access plus 7 days"
+    ExpiresByType text/css "access plus 30 days"
+    ExpiresByType application/javascript "access plus 30 days"
+    ExpiresByType text/javascript "access plus 30 days"
+    ExpiresByType image/svg+xml "access plus 30 days"
+    ExpiresByType image/png "access plus 30 days"
+    ExpiresByType image/jpeg "access plus 30 days"
+    ExpiresByType image/webp "access plus 30 days"
+    ExpiresByType font/woff2 "access plus 30 days"
 
     AddOutputFilterByType DEFLATE text/html text/css application/javascript image/svg+xml
 
@@ -474,6 +505,15 @@ if [[ "$MODO" == "producao" ]]; then
   fi
   [[ $CERT_OK -eq 1 ]] || ENDERECO="http://$DOMINIO"
 fi
+
+# ---------- publicação: versão nos arquivos e otimização de fotos ----------
+bash "$DIR/deploy/carimbar.sh" "$DIR" "$ENDERECO"
+cat > /etc/cron.d/webnet-fotos <<EOF
+# Otimiza as fotos do carrossel do site da WebNet a cada 5 minutos
+*/5 * * * * root bash $DIR/deploy/otimizar-fotos.sh $DIR/fotos >/dev/null 2>&1
+EOF
+chmod 644 /etc/cron.d/webnet-fotos
+ok "Fotos enviadas para $DIR/fotos/ serão otimizadas automaticamente a cada 5 minutos"
 
 # ---------- 7. comando de atualização ----------
 titulo "7. Comando de atualização"

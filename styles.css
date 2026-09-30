@@ -1,3 +1,15 @@
+/* Roboto (variável, 100–900) servida pelo próprio site — licença em fontes/LICENSE-Roboto.txt */
+@font-face {
+  font-family: "Roboto"; font-style: normal; font-weight: 100 900; font-display: swap;
+  src: url("fontes/roboto-latin.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: "Roboto"; font-style: normal; font-weight: 100 900; font-display: swap;
+  src: url("fontes/roboto-latin-ext.woff2") format("woff2");
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
 :root {
   --petrol: #236085;
   --petrol-deep: #174766;
@@ -8,7 +20,6 @@
   --muted: #4A6272;
   --white: #FFFFFF;
 
-  /* Fontes anteriores: --display "Bricolage Grotesque" e --body "Figtree" */
   --display: "Roboto", system-ui, sans-serif;
   --body: "Roboto", system-ui, sans-serif;
 
@@ -196,19 +207,19 @@ p { margin: 0; }
 /* FAQ */
 .faq { background: var(--white); }
 .faq__grid { display: grid; grid-template-columns: .8fr 1.2fr; gap: clamp(32px, 6vw, 88px); }
-.faq details { border-bottom: 1px solid var(--line); }
-.faq summary {
+:is(.faq, .dicas) details { border-bottom: 1px solid var(--line); }
+:is(.faq, .dicas) summary {
   cursor: pointer; list-style: none; padding: 20px 40px 20px 0; position: relative;
   font: 600 1.12rem var(--body);
 }
-.faq summary::-webkit-details-marker { display: none; }
-.faq summary::after {
+:is(.faq, .dicas) summary::-webkit-details-marker { display: none; }
+:is(.faq, .dicas) summary::after {
   content: ""; position: absolute; right: 6px; top: 50%; width: 12px; height: 12px; margin-top: -8px;
   border-right: 2.5px solid var(--petrol); border-bottom: 2.5px solid var(--petrol);
   transform: rotate(45deg); transition: transform .2s;
 }
-.faq details[open] summary::after { transform: rotate(-135deg); margin-top: -2px; }
-.faq details p { padding: 0 0 22px; color: var(--muted); max-width: 62ch; }
+:is(.faq, .dicas) details[open] summary::after { transform: rotate(-135deg); margin-top: -2px; }
+:is(.faq, .dicas) details p { padding: 0 0 22px; color: var(--muted); max-width: 62ch; }
 
 /* Fechamento */
 .closing { background: var(--petrol); color: var(--white); padding: clamp(56px, 8vw, 88px) 0; }
@@ -341,7 +352,7 @@ p { margin: 0; }
 .section-head p,
 .picker__fit,
 .why__list dd,
-.faq details p,
+:is(.faq, .dicas) details p,
 .slide__caption p,
 .legal__body p,
 .legal__body li,
@@ -502,3 +513,94 @@ p { margin: 0; }
   .ebooks__passos .btn { width: 100%; white-space: normal; text-align: center; }
   .ebooks__estante { gap: 24px; }
 }
+
+/* Links do rodapé */
+.footer__links { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; }
+
+/* Aviso no topo (config.js > AVISO) */
+.aviso { font-size: .95rem; }
+.aviso__inner { display: flex; align-items: center; gap: 16px; padding-top: 10px; padding-bottom: 10px; }
+.aviso p { flex: 1; }
+.aviso--manutencao { background: #FFE8A3; color: var(--ink); }
+.aviso--instabilidade { background: #B3261E; color: var(--white); }
+.aviso--info { background: var(--petrol-deep); color: var(--white); }
+.aviso__fechar {
+  flex: none; width: 36px; height: 36px; border-radius: 50%; border: 0; cursor: pointer;
+  background: rgba(0,0,0,.08); color: inherit; display: grid; place-items: center;
+}
+.aviso--instabilidade .aviso__fechar, .aviso--info .aviso__fechar { background: rgba(255,255,255,.15); }
+.aviso__fechar svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2.5; stroke-linecap: round; }
+
+/* Botão flutuante do WhatsApp */
+.wa-flutuante {
+  position: fixed; right: 20px; bottom: 20px; z-index: 30;
+  display: inline-flex; align-items: center; gap: 10px; padding: 12px 18px 12px 14px;
+  border-radius: 999px; background: #25D366; color: #0B3B1E; font-weight: 700; text-decoration: none;
+  box-shadow: 0 10px 24px -8px rgba(8, 36, 56, .5);
+  transition: transform .15s, box-shadow .15s;
+}
+.wa-flutuante:hover { transform: translateY(-2px); box-shadow: 0 14px 28px -8px rgba(8, 36, 56, .55); }
+.wa-flutuante svg { width: 26px; height: 26px; fill: currentColor; }
+@media (max-width: 640px) {
+  .wa-flutuante { right: 14px; bottom: 14px; padding: 14px; }
+  .wa-flutuante span { display: none; }
+}
+/* não cobre o rodapé no fim da página */
+.footer { padding-bottom: 96px; }
+
+/* "Qual plano é ideal?" */
+.quiz-chamada { margin-top: 28px; display: flex; align-items: center; justify-content: space-between; gap: 16px 24px; flex-wrap: wrap;
+  background: var(--white); border: 1px dashed var(--petrol); border-radius: 16px; padding: 18px 22px; }
+.quiz__passo { color: var(--muted); font-weight: 600; font-size: .9rem; margin-bottom: 6px; }
+.quiz h2 { font-size: clamp(1.4rem, 3vw, 1.9rem); }
+.quiz__opcoes { display: grid; gap: 10px; margin-top: 22px; }
+.quiz__opcao { text-align: left; font: 600 1.05rem var(--body); padding: 16px 18px; border-radius: 14px; cursor: pointer;
+  border: 2px solid var(--line); background: var(--white); color: var(--ink); transition: border-color .15s, background-color .15s; }
+.quiz__opcao:hover, .quiz__opcao:focus-visible { border-color: var(--petrol); background: var(--mist); }
+.quiz__resultado { margin-top: 20px; padding: 20px; border-radius: 16px; background: var(--mist); display: grid; gap: 6px; }
+.quiz__resultado p { color: var(--muted); }
+.quiz__acoes { margin-top: 20px; display: flex; flex-wrap: wrap; gap: 10px; }
+
+/* Planos empresariais */
+.empresas { background: var(--ink); color: var(--white); padding: clamp(64px, 9vw, 112px) 0; }
+.empresas__grid { display: grid; grid-template-columns: .9fr 1.1fr; gap: clamp(32px, 6vw, 72px); align-items: center; }
+.empresas__desc { margin: 14px 0 24px; color: rgba(255,255,255,.78); font-size: 1.1rem; max-width: 46ch; }
+.empresas__itens { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.empresas__itens li { border-top: 3px solid var(--lime); padding-top: 12px; color: rgba(255,255,255,.75); font-size: .95rem; }
+.empresas__itens strong { display: block; color: var(--white); font-size: 1.1rem; margin-bottom: 4px; }
+
+/* Pré-cadastro */
+.cadastro { background: var(--petrol); color: var(--white); padding: clamp(64px, 9vw, 112px) 0; }
+.cadastro__grid { display: grid; grid-template-columns: .8fr 1.2fr; gap: clamp(32px, 6vw, 72px); align-items: start; }
+.cadastro__desc { margin: 14px 0; font-size: 1.1rem; color: rgba(255,255,255,.88); }
+.cadastro .fine { color: rgba(255,255,255,.7); }
+.cadastro__form { display: grid; grid-template-columns: 1fr 1fr; gap: 14px 16px; background: var(--white); color: var(--ink); border-radius: 20px; padding: clamp(20px, 3vw, 28px); }
+.cadastro__form label { display: grid; gap: 6px; font-weight: 600; font-size: .95rem; }
+.cadastro__form label:first-child, .cadastro__form label:nth-child(3) { grid-column: 1 / -1; }
+.cadastro__form input, .cadastro__form select { font: 500 1rem var(--body); padding: 12px 14px; border: 2px solid var(--line); border-radius: 12px; background: var(--white); color: var(--ink); min-width: 0; }
+.cadastro__form input:focus, .cadastro__form select:focus { border-color: var(--petrol); outline: none; }
+.cadastro__erro { grid-column: 1 / -1; color: #B3261E; font-weight: 600; min-height: 0; }
+.cadastro__erro:empty { display: none; }
+.cadastro__form .btn { grid-column: 1 / -1; justify-self: start; }
+
+/* Dicas rápidas */
+.dicas { margin-top: 40px; }
+.dicas h3 { font-size: 1.4rem; margin-bottom: 4px; }
+.dicas .faq__list { background: var(--white); border-radius: 16px; padding: 4px 22px; border: 1px solid var(--line); }
+.dicas details:last-child { border-bottom: 0; }
+.dicas .fine { margin-top: 10px; }
+
+@media (max-width: 880px) {
+  .empresas__grid, .cadastro__grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 560px) {
+  .empresas__itens, .cadastro__form { grid-template-columns: 1fr; }
+  .cadastro__form .btn { justify-self: stretch; }
+}
+
+/* Página 404 */
+.erro404 { background: var(--white); padding: clamp(64px, 12vw, 140px) 0; text-align: center; }
+.erro404__codigo { font: 800 clamp(5rem, 18vw, 10rem)/1 var(--display); color: var(--petrol); letter-spacing: -0.04em; }
+.erro404 h1 { font-size: clamp(1.8rem, 4vw, 2.6rem); margin-top: 8px; }
+.erro404 p:not(.erro404__codigo) { margin: 14px auto 0; color: var(--muted); max-width: 46ch; }
+.erro404__acoes { margin-top: 28px; display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }

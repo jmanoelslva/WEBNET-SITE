@@ -56,6 +56,27 @@ webnet-atualizar v0.2.1
 
 O primeiro lista as versões (tags) disponíveis; o segundo instala uma versão específica, por exemplo para voltar atrás. A pasta `fotos/` nunca é alterada pela atualização.
 
+A cada atualização, os links de CSS e JS recebem a versão (`styles.css?v=1ab464d`) e as páginas HTML não ficam em cache: quem já visitou o site vê a versão nova na hora.
+
+### Ao atualizar da v0.3.0 para a v0.4.0 (uma vez só)
+
+A v0.4.0 mudou a configuração do servidor web (página 404, cache, otimização de fotos). Depois do `webnet-atualizar`, rode o instalador de novo e responda Enter em tudo (ele lembra as respostas):
+
+```bash
+bash /var/www/webnet/deploy/instalar.sh
+```
+
+### Fotos do carrossel
+
+Envie as fotos para `/var/www/webnet/fotos/`. A cada 5 minutos, fotos maiores que 1600 px ou 400 KB são convertidas para WEBP (bem mais leves); o original fica guardado em `fotos/.originais/`, sem aparecer no site. Para otimizar na hora: `bash /var/www/webnet/deploy/otimizar-fotos.sh`.
+
+### Opcionais (em `config.js`)
+
+- **Aviso no topo** (`AVISO`): manutenção, instabilidade ou comunicado, com data para sumir sozinho.
+- **Estatísticas sem cookies** (`ESTATISTICAS_GOATCOUNTER`): crie uma conta gratuita em goatcounter.com e informe o código.
+- **Teste de velocidade próprio** (`TESTE_VELOCIDADE_URL`): o [LibreSpeed](https://github.com/librespeed/speedtest) é gratuito e pode rodar num servidor da WebNet (a forma mais simples é com Docker: `docker run -d -p 8080:8080 ghcr.io/librespeed/speedtest`). Para medir a rede da WebNet, ele deve ficar dentro da rede do provedor. Depois, troque o endereço em `config.js`.
+- **Contrato de serviço** (`CONTRATO_URL`): coloque o PDF em `docs/` e informe o caminho para o link aparecer no rodapé.
+
 ### Atenção: portal /client
 
 A Área do Cliente usa `https://webnetse.com.br/client`. Se o site for instalado no próprio `webnetse.com.br` e o sistema de clientes estiver em outro servidor, o `/client` deixa de funcionar. Prefira um subdomínio para o site ou configure um proxy para `/client`. O instalador avisa quando detecta esse caso.
