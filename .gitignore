@@ -1,0 +1,6 @@
+# Configuração local do editor/visualizador
+.claude/
+.vscode/
+node_modules/
+Thumbs.db
+.DS_Store

@@ -1,0 +1,230 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>WebNet — Internet fibra óptica em Propriá-SE</title>
+  <meta name="description" content="WebNet Conexão em Alta Velocidade: internet 100% fibra óptica em Propriá-SE com instalação rápida, Wi-Fi incluso e suporte local.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="icon" href="logo-marca.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <a class="skip" href="#conteudo">Pular para o conteúdo</a>
+
+  <header class="topbar">
+    <div class="wrap topbar__inner">
+      <a href="#" class="logo">
+        <img src="logo-marca.svg" alt="WebNet, conexão em alta velocidade" width="539" height="365">
+      </a>
+      <nav class="nav" aria-label="Principal">
+        <a href="#planos">Planos</a>
+        <a href="#cobertura">Cobertura</a>
+        <a href="#ajuda">Ajuda</a>
+        <a href="#duvidas">Dúvidas</a>
+      </nav>
+      <div class="topbar__actions">
+        <a href="#ajuda" class="link-quiet">2ª via do boleto</a>
+        <a href="#" class="btn btn--ghost">Área do cliente</a>
+      </div>
+      <button class="menu-btn" aria-expanded="false" aria-controls="mobile-menu">Menu</button>
+    </div>
+    <div id="mobile-menu" class="mobile-menu" hidden>
+      <a href="#planos">Planos</a>
+      <a href="#cobertura">Cobertura</a>
+      <a href="#ajuda">Ajuda</a>
+      <a href="#duvidas">Dúvidas</a>
+      <a href="#ajuda">2ª via do boleto</a>
+      <a href="#">Área do cliente</a>
+    </div>
+  </header>
+
+  <main id="conteudo">
+    <!-- HERO -->
+    <section class="hero">
+      <div class="wrap hero__grid">
+        <div class="hero__copy">
+          <h1>Fibra que aguenta a casa inteira conectada.</h1>
+          <p class="lead">Internet 100% fibra óptica, com Wi-Fi incluso, instalação em até 48 horas e atendimento de gente daqui da cidade.</p>
+          <ul class="hero__facts">
+            <li><strong>Sem fidelidade</strong> nos planos mensais</li>
+            <li><strong>Upload</strong> de até 50% do download</li>
+            <li><strong>Suporte</strong> todos os dias, das 8h às 22h</li>
+          </ul>
+        </div>
+
+        <div class="picker" aria-labelledby="picker-title">
+          <h2 id="picker-title" class="picker__title">Monte sua conexão</h2>
+          <div class="picker__speeds" role="radiogroup" aria-label="Velocidade">
+            <!-- preenchido pelo script.js -->
+          </div>
+          <div class="picker__readout">
+            <div class="picker__speed"><span id="pk-speed">500</span><small id="pk-unit">Mega</small></div>
+            <div class="picker__price">
+              <span class="picker__cur">R$</span><span id="pk-price">99</span><span class="picker__cents">,90<small>/mês</small></span>
+            </div>
+          </div>
+          <p class="picker__fit" id="pk-fit">Para 4 a 6 pessoas: vídeo em 4K, chamadas e jogos ao mesmo tempo.</p>
+          <ul class="picker__perks" id="pk-perks"></ul>
+          <a class="btn btn--lime btn--block" id="pk-cta" href="#">Contratar pelo WhatsApp</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- COBERTURA -->
+    <section id="cobertura" class="coverage">
+      <div class="wrap coverage__inner">
+        <div>
+          <h2>A WebNet chega na sua rua?</h2>
+          <p>Digite o CEP e a gente confere na hora.</p>
+        </div>
+        <form class="coverage__form" id="cep-form" novalidate>
+          <label for="cep" class="sr-only">CEP</label>
+          <input id="cep" name="cep" inputmode="numeric" autocomplete="postal-code" placeholder="00000-000" maxlength="9">
+          <button class="btn btn--lime" type="submit">Consultar CEP</button>
+          <p class="coverage__result" id="cep-result" role="status" aria-live="polite"></p>
+        </form>
+      </div>
+    </section>
+
+    <!-- PLANOS -->
+    <section id="planos" class="plans">
+      <div class="wrap">
+        <div class="section-head">
+          <h2>Planos de internet fibra</h2>
+          <p>Todos com Wi-Fi incluso, instalação grátis e sem limite de consumo.</p>
+        </div>
+        <div class="plans__grid" id="plans-grid"><!-- preenchido pelo script.js --></div>
+        <p class="fine">Preços com desconto de pontualidade. Consulte condições de instalação para sua região.</p>
+      </div>
+    </section>
+
+    <!-- POR QUE -->
+    <section class="why">
+      <div class="wrap why__grid">
+        <h2>O que muda quando a internet é fibra de ponta a ponta</h2>
+        <dl class="why__list">
+          <div>
+            <dt>Estável na chuva e no horário de pico</dt>
+            <dd>A fibra leva luz, não eletricidade. Interferência e queda de sinal viram exceção.</dd>
+          </div>
+          <div>
+            <dt>Wi-Fi que alcança os quartos</dt>
+            <dd>Roteador dual band em todos os planos e Wi-Fi 6 a partir de 500 Mega. Casa grande? Tem repetidor mesh.</dd>
+          </div>
+          <div>
+            <dt>Técnico que conhece o bairro</dt>
+            <dd>Equipe própria, sem terceirizada. Visita técnica agendada em até 24 horas.</dd>
+          </div>
+          <div>
+            <dt>Conta sem surpresa</dt>
+            <dd>O valor contratado é o valor da fatura. Pague por Pix, boleto ou débito automático.</dd>
+          </div>
+        </dl>
+      </div>
+    </section>
+
+    <!-- AJUDA -->
+    <section id="ajuda" class="help">
+      <div class="wrap">
+        <div class="section-head">
+          <h2>Já é cliente?</h2>
+          <p>Resolva sem precisar ligar.</p>
+        </div>
+        <div class="help__grid">
+          <a class="help__item" href="#">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h9l3 3v15H6z M9 10h6 M9 14h6 M9 18h4" /></svg>
+            <span><strong>2ª via do boleto</strong>Baixe a fatura ou copie o código Pix.</span>
+          </a>
+          <a class="help__item" href="#">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20l1.5-4A8 8 0 1 1 8 18.5z" /></svg>
+            <span><strong>Suporte no WhatsApp</strong>Internet lenta ou sem sinal? Fale com o técnico.</span>
+          </a>
+          <a class="help__item" href="#">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 15a9 9 0 0 1 18 0 M12 15l4-5 M12 15h0" /><circle cx="12" cy="15" r="1.5"/></svg>
+            <span><strong>Teste de velocidade</strong>Meça sua conexão pelo cabo ou Wi-Fi.</span>
+          </a>
+          <a class="help__item" href="#">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5a10 10 0 0 1 14 0 M8 15.5a6 6 0 0 1 8 0" /><circle cx="12" cy="19" r="1.5"/></svg>
+            <span><strong>Trocar senha do Wi-Fi</strong>Passo a passo para o seu roteador.</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section id="duvidas" class="faq">
+      <div class="wrap faq__grid">
+        <h2>Dúvidas frequentes</h2>
+        <div class="faq__list">
+          <details>
+            <summary>Quanto tempo leva a instalação?</summary>
+            <p>Depois da aprovação do cadastro, agendamos a instalação em até 48 horas úteis. O técnico passa a fibra, instala o roteador e testa a conexão com você.</p>
+          </details>
+          <details>
+            <summary>Preciso pagar pela instalação?</summary>
+            <p>Não. A instalação é grátis em todos os planos para endereços dentro da área de cobertura.</p>
+          </details>
+          <details>
+            <summary>Tem fidelidade?</summary>
+            <p>Os planos mensais não têm fidelidade. Planos com benefícios extras podem ter permanência de 12 meses, sempre informada antes da contratação.</p>
+          </details>
+          <details>
+            <summary>O roteador é meu?</summary>
+            <p>O roteador fica em comodato: é da WebNet, você usa enquanto for cliente e devolve ao cancelar. Se der defeito, trocamos sem custo.</p>
+          </details>
+          <details>
+            <summary>Posso mudar de plano depois?</summary>
+            <p>Pode, a qualquer momento, pelo WhatsApp ou pela Área do cliente. O novo valor vale a partir da próxima fatura.</p>
+          </details>
+          <details>
+            <summary>E se eu mudar de endereço?</summary>
+            <p>Se o novo endereço estiver na área de cobertura, fazemos a mudança de endereço sem cobrar taxa.</p>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA FINAL -->
+    <section class="closing">
+      <div class="wrap closing__inner">
+        <h2>Fale com a WebNet</h2>
+        <p>Atendimento de segunda a domingo, das 8h às 22h.</p>
+        <div class="closing__actions">
+          <a class="btn btn--lime" href="#" data-wa>Chamar no WhatsApp</a>
+          <a class="btn btn--light" href="tel:+550000000000">Ligar (00) 0000-0000</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="wrap footer__grid">
+      <div>
+        <a href="#" class="logo logo--footer"><img src="webnet-logo.svg" alt="WebNet, seu provedor de internet" width="602" height="423"></a>
+        <p>WebNet Conexão em Alta Velocidade<br>CNPJ 13.094.761/0001-00</p>
+      </div>
+      <div>
+        <h3>Atendimento</h3>
+        <p>WhatsApp (00) 00000-0000<br><a href="mailto:gerente@webnetprovedor.com">gerente@webnetprovedor.com</a></p>
+      </div>
+      <div>
+        <h3>Loja</h3>
+        <address>
+          <a href="https://www.google.com/maps/search/?api=1&amp;query=Pra%C3%A7a+Fausto+Cardoso+90+Propri%C3%A1+SE+49940-000" target="_blank" rel="noopener">Praça Fausto Cardoso, 90<br>Propriá – SE, 49940-000</a>
+        </address>
+        <p>Seg a sex 8h–18h, sáb 8h–12h</p>
+      </div>
+      <div>
+        <h3>Institucional</h3>
+        <p><a href="#">Contrato de serviço</a><br><a href="privacidade.html">Política de privacidade</a><br><a href="#">Trabalhe conosco</a></p>
+      </div>
+    </div>
+    <div class="wrap footer__legal">© <span id="year"></span> WebNet Conexão em Alta Velocidade · CNPJ 13.094.761/0001-00 · Propriá – SE</div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
