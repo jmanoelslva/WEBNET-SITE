@@ -7,6 +7,33 @@ e este projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR
 
 ## [Unreleased]
 
+## [0.3.0] - 2026-09-30
+
+### Adicionado
+
+- Instalador `deploy/instalar.sh` para Debian/Ubuntu: detecta nginx e Apache, pergunta qual usar e instala o que faltar, pergunta domínio ou subdomínio (com opção de www), baixa o site do GitHub, configura o servidor web e emite o certificado Let's Encrypt com renovação automática. Pode ser executado de novo, reaproveitando as respostas. Tem também um modo "teste em outra porta", para servidores que já rodam outro serviço: usa o servidor web que já está ativo, cria um site separado na porta escolhida, reaproveita o certificado existente e não altera os sites nem as portas 80/443. Funciona como root, sem `sudo`.
+- Comando `webnet-atualizar` (`deploy/atualizar.sh`) para deploy: atualiza o site com o GitHub sem mexer nas fotos, lista versões e permite voltar a uma versão específica.
+- `.gitattributes` garante fim de linha LF nos scripts `.sh`.
+- Estrutura do SVA de e-books, configurável em `SVA_EBOOKS` (`config.js`), com dados fictícios ("Estante Digital"): seção própria com destaques e ícones, estante com livros em duas prateleiras (capas com lombada e desenhos variados), faixa "Como acessar" com 3 passos numerados e botão de WhatsApp; linha "E-books inclusos" nos planos participantes e no seletor do topo.
+- Slides de exemplo do carrossel (`GALERIA_EXEMPLOS` e ilustrações em `img/`), exibidos quando não há fotos, para o carrossel nunca ficar oculto.
+- Política de Privacidade cita parceiros de serviços adicionais, como a plataforma de e-books.
+
+### Alterado
+
+- Consulta de cobertura por cidade no lugar do CEP: a faixa "A WebNet chega na sua rua?" lista as cidades atendidas (Propriá, Amparo de São Francisco, Cedro de São João, Malhada dos Bois, São Francisco e Telha) e o botão abre o WhatsApp para a equipe confirmar a rua. Cidades configuráveis em `CIDADES_ATENDIDAS`, no `script.js`.
+- Título da página e descrição para buscadores citam Propriá e região.
+- Texto da faixa de cobertura: "Onde atendemos:".
+- Política de Privacidade: trecho sobre a consulta de cobertura atualizado.
+- Atalho "Teste de velocidade" abre o fast.com em nova aba.
+- Atalho "2ª via do boleto" e o link "2ª via do boleto" do cabeçalho e do menu do celular (nas duas páginas) abrem a janela da Área do Cliente.
+- Atalho "Suporte no WhatsApp" abre a conversa com a WebNet já com uma mensagem de suporte técnico.
+- Atalho "Trocar senha do Wi-Fi" abre o WhatsApp da WebNet com o pedido de troca de senha.
+
+### Corrigido
+
+- Seção "Novidades da WebNet" sem espaçamento no topo, com o título colado na borda do bloco; agora segue o mesmo espaçamento das demais seções.
+- Links do menu (Planos, Novidades, Cobertura, Ajuda, Dúvidas) rolavam a página até uma posição em que o cabeçalho fixo cobria o topo da seção.
+
 ## [0.2.1] - 2026-09-30
 
 ### Alterado
@@ -70,7 +97,8 @@ e este projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR
 - Dados da empresa no rodapé: razão social, CNPJ 13.094.761/0001-00, endereço na Praça Fausto Cardoso, 90, Propriá-SE, e e-mail gerente@webnetprovedor.com.
 - Layout responsivo para celular, tablet e computador, com navegação por teclado e suporte a movimento reduzido.
 
-[Unreleased]: https://github.com/jmanoelslva/WEBNET-SITE/compare/v0.2.1...HEAD
+[Unreleased]: https://github.com/jmanoelslva/WEBNET-SITE/compare/v0.3.0...HEAD
+[0.3.0]: https://github.com/jmanoelslva/WEBNET-SITE/compare/v0.2.1...v0.3.0
 [0.2.1]: https://github.com/jmanoelslva/WEBNET-SITE/compare/v0.2.0...v0.2.1
 [0.2.0]: https://github.com/jmanoelslva/WEBNET-SITE/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/jmanoelslva/WEBNET-SITE/releases/tag/v0.1.0

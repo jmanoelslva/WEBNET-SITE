@@ -9,20 +9,23 @@ Site institucional da **WebNet Conexão em Alta Velocidade**, provedor de intern
 | `index.html` | Página inicial |
 | `privacidade.html` | Política de Privacidade (LGPD) |
 | `styles.css` | Estilos e paleta de cores (variáveis no início do arquivo) |
-| `config.js` | WhatsApp, links dos apps e endereço da Área do Cliente (usado nas duas páginas) |
+| `config.js` | WhatsApp, links dos apps, endereço da Área do Cliente e SVA de e-books (`SVA_EBOOKS`) |
 | `script.js` | Planos, preços e CEPs atendidos (configuração no início do arquivo) |
 | `area-cliente.js` | Janela da Área do Cliente: baixar o app ou continuar no navegador |
 | `galeria.js` | Lista de slides do carrossel (gerada por `atualizar-galeria.bat`) |
 | `gerar-galeria.js`, `atualizar-galeria.bat` | Atualizam o carrossel com as imagens de `fotos/` |
 | `fotos/` | Imagens do carrossel (não versionadas) |
-| `DEPLOY.md` | Publicação em servidor Debian com nginx |
+| `img/` | Ilustrações dos slides de exemplo, exibidos quando `fotos/` está vazia |
+| `DEPLOY.md` | Publicação em servidor Debian (nginx ou Apache) |
+| `deploy/instalar.sh` | Instalador para o servidor: servidor web, domínio e certificado HTTPS |
+| `deploy/atualizar.sh` | Deploy de novas versões do GitHub (comando `webnet-atualizar`) |
 | `logo-marca.svg`, `webnet-logo.svg` | Logotipos usados no site |
 | `LOGO.svg`, `LOGO.png` | Arquivos originais do logotipo |
 | `appstore.webp`, `googleplay.webp` | Selos das lojas de aplicativos |
 
 ## Publicação
 
-O site será hospedado em um servidor Debian com nginx. O passo a passo está em [DEPLOY.md](DEPLOY.md).
+O site será hospedado em um servidor Debian. No servidor, como root, `bash instalar.sh` instala tudo (nginx ou Apache, domínio e certificado HTTPS, ou um teste numa porta separada) e `webnet-atualizar` faz os próximos deploys. Detalhes em [DEPLOY.md](DEPLOY.md).
 
 ## Como visualizar
 
@@ -35,6 +38,10 @@ npx http-server . -p 5180
 ## Como editar os planos
 
 Altere a lista `PLANOS` e `CEPS_ATENDIDOS` no início de `script.js`. WhatsApp, links dos apps e da Área do Cliente ficam em `config.js`.
+
+## SVA de e-books
+
+A seção de e-books, o benefício nos cartões de planos e o slide de lançamento são montados a partir de `SVA_EBOOKS`, em `config.js`. **Nome, números e textos atuais são fictícios.** Troque pelos dados do fornecedor contratado, ou use `ativo: false` para esconder tudo.
 
 ## Como adicionar fotos ao carrossel de novidades
 

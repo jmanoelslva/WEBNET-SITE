@@ -17,11 +17,17 @@ const FORMATOS = [".jpg", ".jpeg", ".png", ".webp", ".gif", ".avif", ".svg", ".b
 // Lê a lista atual (se existir) para preservar textos e ordem
 let atual = [];
 let autoplay = 7;
+let exemplos = null; // GALERIA_EXEMPLOS é mantida como está
 if (fs.existsSync(ARQUIVO)) {
   const ctx = {};
-  vm.runInNewContext(fs.readFileSync(ARQUIVO, "utf8") + "\n;this.G = GALERIA; this.A = GALERIA_AUTOPLAY;", ctx);
+  vm.runInNewContext(
+    fs.readFileSync(ARQUIVO, "utf8") +
+      '\n;this.G = GALERIA; this.A = GALERIA_AUTOPLAY; this.E = typeof GALERIA_EXEMPLOS !== "undefined" ? GALERIA_EXEMPLOS : null;',
+    ctx
+  );
   atual = Array.isArray(ctx.G) ? ctx.G : [];
   if (typeof ctx.A === "number") autoplay = ctx.A;
+  if (Array.isArray(ctx.E)) exemplos = ctx.E;
 }
 
 const arquivos = fs.readdirSync(PASTA)
@@ -48,7 +54,17 @@ const novos = arquivos
 const lista = [...novos, ...mantidos];
 
 const campo = (k, v) => `    ${k}: ${JSON.stringify(v)},`;
-const blocos = lista.map((g) => ["  {", ...Object.entries(g).map(([k, v]) => campo(k, v)), "  },"].join("\n"));
+const bloco = (g) => ["  {", ...Object.entries(g).map(([k, v]) => campo(k, v)), "  },"].join("\n");
+const blocos = lista.map(bloco);
+const trechoExemplos = exemplos
+  ? `
+
+// Slides de exemplo: aparecem quando ainda não há nenhuma foto na pasta fotos/,
+// para o carrossel nunca ficar vazio. Pode editar ou apagar.
+const GALERIA_EXEMPLOS = [
+${exemplos.map(bloco).join("\n")}
+];`
+  : "";
 
 const saida = `// ===== Galeria de novidades (carrossel) =====
 //
@@ -67,7 +83,7 @@ const saida = `// ===== Galeria de novidades (carrossel) =====
 //   botao   texto do botão (padrão "Saiba mais")
 // Fotos sem título, texto ou link aparecem sem legenda. Esses campos são mantidos pelo atualizar-galeria.bat.
 
-const GALERIA = [${blocos.length ? "\n" + blocos.join("\n") + "\n" : ""}];
+const GALERIA = [${blocos.length ? "\n" + blocos.join("\n") + "\n" : ""}];${trechoExemplos}
 
 // Troca automática de slide, em segundos. Use 0 para desligar.
 const GALERIA_AUTOPLAY = ${autoplay};

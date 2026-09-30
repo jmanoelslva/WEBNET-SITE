@@ -20,5 +20,34 @@
 
 const GALERIA = [];
 
+// Slides de exemplo: aparecem quando ainda não há nenhuma foto na pasta fotos/,
+// para o carrossel nunca ficar vazio. Pode editar ou apagar.
+const GALERIA_EXEMPLOS = [
+  {
+    imagem: "img/novidade-ebooks.svg",
+    alt: "Ilustração de uma pilha de livros",
+    titulo: "Chegou a Estante Digital",
+    texto: "E-books inclusos nos planos a partir de 300 Mega.",
+    link: "#ebooks",
+    botao: "Conhecer",
+  },
+  {
+    imagem: "img/novidade-app.svg",
+    alt: "Ilustração de um celular com o app WebNet SE",
+    titulo: "Baixe o app WebNet SE",
+    texto: "Faturas, 2ª via e chamados na palma da mão.",
+    link: "#app",
+    botao: "Baixar o app",
+  },
+  {
+    imagem: "img/novidade-cobertura.svg",
+    alt: "Ilustração de um marcador de mapa com sinal de internet",
+    titulo: "Internet em Propriá e região",
+    texto: "Atendemos 6 cidades. Veja se chegamos na sua rua.",
+    link: "#cobertura",
+    botao: "Consultar",
+  },
+];
+
 // Troca automática de slide, em segundos. Use 0 para desligar.
 const GALERIA_AUTOPLAY = 7;

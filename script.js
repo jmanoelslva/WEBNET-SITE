@@ -1,9 +1,16 @@
 // ===== Configuração da WebNet — edite aqui =====
 // WhatsApp, links dos apps e da Área do Cliente ficam em config.js.
 
-// CEPs atendidos (prefixos). Propriá-SE usa CEP único 49940-000.
-// Para incluir povoados ou cidades vizinhas, acrescente os prefixos aqui.
-const CEPS_ATENDIDOS = ["49940"];
+// Cidades atendidas (aparecem na faixa "A WebNet chega na sua rua?").
+// Para incluir uma cidade, acrescente o nome aqui.
+const CIDADES_ATENDIDAS = [
+  "Propriá",
+  "Amparo de São Francisco",
+  "Cedro de São João",
+  "Malhada dos Bois",
+  "São Francisco",
+  "Telha",
+];
 
 // Incluso em todos os planos (aparece no seletor do topo)
 const INCLUSO = ["Wi-Fi incluso", "Instalação grátis", "Sem limite de consumo"];
@@ -38,6 +45,14 @@ const PLANOS = [
   },
 ];
 // ===============================================
+
+// SVA de e-books: acrescenta o benefício aos planos participantes (config.js)
+const EBOOKS_ATIVO = typeof SVA_EBOOKS !== "undefined" && SVA_EBOOKS.ativo;
+if (EBOOKS_ATIVO) {
+  PLANOS.forEach((p) => {
+    if (p.unidade === "Mega" && SVA_EBOOKS.planos.includes(p.mega)) p.extras.unshift(`E-books inclusos (${SVA_EBOOKS.nome})`);
+  });
+}
 
 const nomePlano = (p) => `${p.mega} ${p.unidade}`;
 const reais = (v) => Math.floor(v);
@@ -93,26 +108,34 @@ el("plans-grid").innerHTML = PLANOS.map((p) => `
     <a class="btn btn--ghost" href="${waLink(`Olá! Quero contratar o plano de ${nomePlano(p)} da WebNet.`)}" aria-label="Contratar ${nomePlano(p)}">Contratar</a>
   </article>`).join("");
 
-// Consulta de CEP
-const cep = el("cep");
-cep.addEventListener("input", () => {
-  const d = cep.value.replace(/\D/g, "").slice(0, 8);
-  cep.value = d.length > 5 ? `${d.slice(0, 5)}-${d.slice(5)}` : d;
-});
-el("cep-form").addEventListener("submit", (e) => {
-  e.preventDefault();
-  const d = cep.value.replace(/\D/g, "");
-  const out = el("cep-result");
-  if (d.length !== 8) { out.textContent = "Digite os 8 números do CEP."; return; }
-  if (CEPS_ATENDIDOS.some((pre) => d.startsWith(pre))) {
-    out.innerHTML = `Boa notícia: atendemos o CEP ${cep.value}. <a href="#planos">Escolha seu plano</a>.`;
+// Consulta de cobertura por cidade: a rua é confirmada pela equipe no WhatsApp
+el("cidades-lista").innerHTML = CIDADES_ATENDIDAS.map((c) => `<li>${c}</li>`).join("");
+const cidade = el("cidade");
+cidade.innerHTML = `<option value="">Selecione…</option>` +
+  CIDADES_ATENDIDAS.map((c) => `<option>${c}</option>`).join("") +
+  `<option value="outra">Outra cidade</option>`;
+function atualizarCobertura() {
+  const c = cidade.value;
+  const out = el("cobertura-result");
+  const wa = el("cobertura-wa");
+  if (!c) {
+    out.textContent = "";
+    wa.href = waLink("Olá! Quero saber se a WebNet atende o meu endereço.");
+  } else if (c === "outra") {
+    out.textContent = "Ainda não atendemos outras cidades, mas a rede cresce sempre. Fale com a gente pelo WhatsApp.";
+    wa.href = waLink("Olá! Vocês atendem a minha cidade? Moro em: ");
   } else {
-    out.innerHTML = `Ainda não confirmamos cobertura no CEP ${cep.value}. <a href="${waLink(`Olá! Vocês atendem o CEP ${cep.value}?`)}">Pergunte pelo WhatsApp</a> — a rede cresce todo mês.`;
+    out.textContent = `Atendemos ${c}! Confirme sua rua com a nossa equipe pelo WhatsApp.`;
+    wa.href = waLink(`Olá! Moro em ${c} e quero confirmar se a WebNet atende o meu endereço: `);
   }
-});
+}
+cidade.addEventListener("change", atualizarCobertura);
+el("cobertura-form").addEventListener("submit", (e) => e.preventDefault());
+atualizarCobertura();
 
 // WhatsApp genérico
 document.querySelectorAll("[data-wa]").forEach((a) => (a.href = waLink("Olá! Gostaria de falar com a WebNet.")));
+document.querySelectorAll("[data-wa-msg]").forEach((a) => (a.href = waLink(a.dataset.waMsg)));
 
 // Menu mobile
 const menuBtn = document.querySelector(".menu-btn");
@@ -173,7 +196,10 @@ listarFotos().then(function carrossel(itens) {
   const secao = el("novidades");
   const track = el("news-track");
   const dots = el("news-dots");
-  if (!secao || !itens.length) { if (secao) secao.hidden = true; return; }
+  if (!secao) return;
+  // Sem fotos (ou sem acesso à pasta, como ao abrir o arquivo direto do disco): usa os slides de exemplo
+  if (!itens.length) itens = typeof GALERIA_EXEMPLOS !== "undefined" ? GALERIA_EXEMPLOS : [];
+  if (!itens.length) { secao.hidden = true; return; }
 
   const esc = (s = "") => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
   const destino = (link) => (link === "whatsapp" ? waLink("Olá! Vi uma novidade no site da WebNet.") : link);
@@ -240,3 +266,40 @@ listarFotos().then(function carrossel(itens) {
   const a = el(id);
   if (a) a.href = url || waLink(`Olá! Quero o link do app da WebNet para ${so}.`);
 });
+
+// Seção do SVA de e-books (conteúdo em config.js > SVA_EBOOKS)
+(function ebooks() {
+  const secao = el("ebooks");
+  if (!secao || !EBOOKS_ATIVO) return;
+  const S = SVA_EBOOKS;
+  const ICONES = {
+    livros: '<path d="M4 19V5a2 2 0 0 1 2-2h4v18H6a2 2 0 0 1-2-2z M10 3h4v18h-4z M14 4.5l3.8-1 3.2 16.4-3.8 1z"/>',
+    download: '<path d="M12 3v12 M7 10l5 5 5-5 M4 20h16"/>',
+    dispositivos: '<rect x="2" y="4" width="14" height="10" rx="1.5"/><path d="M6 18h6 M9 14v4"/><rect x="17" y="8" width="5" height="11" rx="1.2"/>',
+    familia: '<circle cx="8" cy="7" r="3"/><circle cx="17" cy="9" r="2.3"/><path d="M2.5 20a5.5 5.5 0 0 1 11 0 M13.5 20a4 4 0 0 1 8 0"/>',
+  };
+  const lista = (arr) => arr.length > 1 ? `${arr.slice(0, -1).join(", ")} e ${arr[arr.length - 1]}` : arr.join("");
+
+  el("ebooks-nome").textContent = S.nome;
+  el("ebooks-titulo").textContent = S.chamada;
+  el("ebooks-desc").textContent = S.descricao;
+  el("ebooks-planos").innerHTML = `Incluso nos planos de <strong>${lista(S.planos.map((m) => `${m} Mega`))}</strong>.`;
+  el("ebooks-destaques").innerHTML = S.destaques.map((d) => `
+    <li>
+      <svg viewBox="0 0 24 24" aria-hidden="true">${ICONES[d.icone] || ICONES.livros}</svg>
+      <span><strong>${d.titulo}</strong>${d.texto}</span>
+    </li>`).join("");
+  // Estante: os livros ficam em prateleiras de 3
+  const livros = S.vitrine.map((l, i) => `
+      <div class="livro livro--${i % 6}" role="listitem">
+        <span class="livro__arte" aria-hidden="true"></span>
+        <span class="livro__titulo">${l.titulo}</span>
+        <span class="livro__autor">${l.autor}</span>
+      </div>`);
+  const prateleiras = [];
+  for (let i = 0; i < livros.length; i += 3) prateleiras.push(`<div class="prateleira">${livros.slice(i, i + 3).join("")}</div>`);
+  el("ebooks-vitrine").innerHTML = prateleiras.join("");
+  el("ebooks-passos").innerHTML = S.passos.map((p) => `<li>${p}</li>`).join("");
+  el("ebooks-cta").href = waLink(`Olá! Quero um plano da WebNet com os e-books da ${S.nome}.`);
+  secao.hidden = false;
+})();

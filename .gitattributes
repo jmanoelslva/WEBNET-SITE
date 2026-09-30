@@ -1,0 +1,4 @@
+# Scripts do servidor Linux sempre com fim de linha LF (senão o bash falha)
+*.sh text eol=lf
+# Atalho do Windows com CRLF
+*.bat text eol=crlf
