@@ -199,7 +199,7 @@
           </div>
         </div>
         <div class="news__viewport">
-          <ul class="news__track" id="news-track" aria-live="polite"></ul>
+          <div class="news__track" id="news-track" aria-live="polite"></div>
         </div>
         <div class="news__dots" id="news-dots" role="group" aria-label="Escolher slide"></div>
       </div>
@@ -321,6 +321,18 @@
       </div>
     </section>
 
+    <!-- DEPOIMENTOS (config.js > DEPOIMENTOS; só aparece com depoimentos reais) -->
+    <section id="depoimentos" class="depoimentos" aria-labelledby="depoimentos-titulo" hidden>
+      <div class="wrap">
+        <div class="section-head">
+          <h2 id="depoimentos-titulo">Quem usa, recomenda</h2>
+          <p>O que dizem os clientes da WebNet em Propriá e região.</p>
+        </div>
+        <ul class="depoimentos__lista" id="depoimentos-lista"></ul>
+        <a class="btn btn--ghost" id="depoimentos-avaliar" href="#" target="_blank" rel="noopener" hidden>Avalie a WebNet no Google</a>
+      </div>
+    </section>
+
     <!-- FAQ -->
     <section id="duvidas" class="faq">
       <div class="wrap faq__grid">
@@ -405,5 +417,8 @@
   <script src="comum.js"></script>
   <script src="script.js"></script>
   <script src="area-cliente.js"></script>
+  <div vw class="enabled"><div vw-access-button class="active"></div><div vw-plugin-wrapper><div class="vw-plugin-top-wrapper"></div></div></div>
+  <script src="https://vlibras.gov.br/app/vlibras-plugin.js"></script>
+  <script src="vlibras.js"></script>
 </body>
 </html>

@@ -109,7 +109,8 @@ el("plans-grid").innerHTML = PLANOS.map((p) => `
   </article>`).join("");
 
 // Consulta de cobertura por cidade: a rua é confirmada pela equipe no WhatsApp
-el("cidades-lista").innerHTML = CIDADES_ATENDIDAS.map((c) => `<li>${c}</li>`).join("");
+const slugCidade = (c) => c.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+el("cidades-lista").innerHTML = CIDADES_ATENDIDAS.map((c) => `<li><a href="internet-fibra-${slugCidade(c)}.html">${c}</a></li>`).join("");
 const cidade = el("cidade");
 cidade.innerHTML = `<option value="">Selecione…</option>` +
   CIDADES_ATENDIDAS.map((c) => `<option>${c}</option>`).join("") +
@@ -195,7 +196,7 @@ listarFotos().then(function carrossel(itens) {
     const legenda = g.titulo || g.texto || g.link;
     const lazy = i ? ' loading="lazy"' : "";
     return `
-    <li class="slide${legenda ? "" : " slide--sem-legenda"}" role="group" aria-roledescription="slide" aria-label="${i + 1} de ${itens.length}">
+    <div class="slide${legenda ? "" : " slide--sem-legenda"}" role="group" aria-roledescription="slide" aria-label="${i + 1} de ${itens.length}">
       <img class="slide__fundo" src="${esc(g.imagem)}" alt=""${lazy}>
       <img class="slide__foto" src="${esc(g.imagem)}" alt="${esc(g.alt || "")}"${lazy}>
       ${legenda ? `<div class="slide__caption">
@@ -203,7 +204,7 @@ listarFotos().then(function carrossel(itens) {
         ${g.texto ? `<p>${esc(g.texto)}</p>` : ""}
         ${g.link ? `<a class="btn btn--lime" href="${esc(destino(g.link))}"${g.link === "whatsapp" || /^https?:/.test(g.link) ? ' target="_blank" rel="noopener"' : ""}>${esc(g.botao || "Saiba mais")}</a>` : ""}
       </div>` : ""}
-    </li>`;
+    </div>`;
   }).join("");
 
   dots.innerHTML = itens.map((_, i) => `<button type="button" aria-label="Ir para o slide ${i + 1}"></button>`).join("");
@@ -232,18 +233,32 @@ listarFotos().then(function carrossel(itens) {
 
   if (itens.length < 2) { secao.querySelector(".news__controls").hidden = true; dots.hidden = true; }
 
-  // Troca automática: pausa com mouse em cima, foco, toque ou aba escondida
+  // Troca automática. Pausa enquanto o mouse está em cima e por alguns segundos depois de um
+  // toque ou clique; o botão pausar/continuar dá o controle ao visitante (acessibilidade).
+  // Com "animações reduzidas" no sistema, a troca continua, só que sem deslizar.
   const segundos = typeof GALERIA_AUTOPLAY === "number" ? GALERIA_AUTOPLAY : 0;
-  if (segundos > 0 && itens.length > 1 && !matchMedia("(prefers-reduced-motion: reduce)").matches) {
-    let pausado = false;
-    const pausar = () => (pausado = true);
-    const seguir = () => (pausado = false);
-    secao.addEventListener("mouseenter", pausar);
-    secao.addEventListener("mouseleave", seguir);
-    secao.addEventListener("focusin", pausar);
-    secao.addEventListener("focusout", seguir);
-    secao.addEventListener("touchstart", pausar, { passive: true });
-    setInterval(() => { if (!pausado && !document.hidden) ir(atual + 1); }, segundos * 1000);
+  if (segundos > 0 && itens.length > 1) {
+    let pausadoPeloBotao = false, mouseEmCima = false, ultimaInteracao = 0;
+    const botao = document.createElement("button");
+    botao.type = "button";
+    botao.className = "news__pausa";
+    const desenhar = () => {
+      botao.setAttribute("aria-label", pausadoPeloBotao ? "Continuar a troca automática" : "Pausar a troca automática");
+      botao.innerHTML = pausadoPeloBotao
+        ? '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5l11 7-11 7z"/></svg>'
+        : '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 5h4v14H7zM13 5h4v14h-4z"/></svg>';
+    };
+    botao.addEventListener("click", () => { pausadoPeloBotao = !pausadoPeloBotao; desenhar(); });
+    desenhar();
+    dots.prepend(botao);
+    const interagiu = () => (ultimaInteracao = Date.now());
+    secao.addEventListener("mouseenter", () => (mouseEmCima = true));
+    secao.addEventListener("mouseleave", () => (mouseEmCima = false));
+    ["touchstart", "pointerdown", "keydown"].forEach((ev) => secao.addEventListener(ev, interagiu, { passive: true }));
+    setInterval(() => {
+      const recente = Date.now() - ultimaInteracao < segundos * 1500;
+      if (!pausadoPeloBotao && !mouseEmCima && !recente && !document.hidden) ir(atual + 1);
+    }, segundos * 1000);
   }
 });
 
@@ -373,4 +388,22 @@ listarFotos().then(function carrossel(itens) {
   }
   dlg.addEventListener("click", (e) => { if (e.target === dlg) dlg.close(); });
   abrir.addEventListener("click", () => { respostas = []; mostrar(); dlg.showModal(); });
+})();
+
+// Depoimentos (config.js > DEPOIMENTOS): só aparecem se houver depoimentos reais cadastrados
+(function depoimentos() {
+  const secao = el("depoimentos");
+  if (!secao || typeof DEPOIMENTOS === "undefined" || !DEPOIMENTOS.ativo || !DEPOIMENTOS.lista.length) return;
+  const esc = (s = "") => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+  el("depoimentos-lista").innerHTML = DEPOIMENTOS.lista.map((d) => `
+    <li class="depoimento">
+      <blockquote>${esc(d.texto)}</blockquote>
+      <p class="depoimento__autor"><strong>${esc(d.nome)}</strong>${d.cidade ? ` · ${esc(d.cidade)}` : ""}</p>
+    </li>`).join("");
+  if (DEPOIMENTOS.avaliarGoogleUrl) {
+    const a = el("depoimentos-avaliar");
+    a.href = DEPOIMENTOS.avaliarGoogleUrl;
+    a.hidden = false;
+  }
+  secao.hidden = false;
 })();

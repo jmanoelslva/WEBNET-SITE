@@ -58,9 +58,9 @@ O primeiro lista as versões (tags) disponíveis; o segundo instala uma versão 
 
 A cada atualização, os links de CSS e JS recebem a versão (`styles.css?v=1ab464d`) e as páginas HTML não ficam em cache: quem já visitou o site vê a versão nova na hora.
 
-### Ao atualizar da v0.3.0 para a v0.4.0 (uma vez só)
+### Ao atualizar para a v0.4.0 ou v0.5.0 (uma vez só)
 
-A v0.4.0 mudou a configuração do servidor web (página 404, cache, otimização de fotos). Depois do `webnet-atualizar`, rode o instalador de novo e responda Enter em tudo (ele lembra as respostas):
+A v0.4.0 e a v0.5.0 mudaram a configuração do servidor web (página 404, cache, otimização de fotos e, na v0.5.0, cabeçalhos de segurança CSP e HSTS). Depois do `webnet-atualizar`, rode o instalador de novo e responda Enter em tudo (ele lembra as respostas):
 
 ```bash
 bash /var/www/webnet/deploy/instalar.sh

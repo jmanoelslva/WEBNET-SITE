@@ -85,6 +85,9 @@
     }
   }
 
+  // Tradutor de Libras (VLibras): incluído em cada página; aqui só é escondido se desligado em config.js
+  if (typeof VLIBRAS_ATIVO !== "undefined" && !VLIBRAS_ATIVO) $$("[vw]").forEach((e) => e.remove());
+
   // Estatísticas sem cookies (GoatCounter), só se configurado
   if (typeof ESTATISTICAS_GOATCOUNTER !== "undefined" && /^[a-z0-9-]+$/i.test(ESTATISTICAS_GOATCOUNTER)) {
     const s = document.createElement("script");

@@ -573,7 +573,7 @@ p { margin: 0; }
 .cadastro { background: var(--petrol); color: var(--white); padding: clamp(64px, 9vw, 112px) 0; }
 .cadastro__grid { display: grid; grid-template-columns: .8fr 1.2fr; gap: clamp(32px, 6vw, 72px); align-items: start; }
 .cadastro__desc { margin: 14px 0; font-size: 1.1rem; color: rgba(255,255,255,.88); }
-.cadastro .fine { color: rgba(255,255,255,.7); }
+.cadastro .fine { color: rgba(255,255,255,.88); }
 .cadastro__form { display: grid; grid-template-columns: 1fr 1fr; gap: 14px 16px; background: var(--white); color: var(--ink); border-radius: 20px; padding: clamp(20px, 3vw, 28px); }
 .cadastro__form label { display: grid; gap: 6px; font-weight: 600; font-size: .95rem; }
 .cadastro__form label:first-child, .cadastro__form label:nth-child(3) { grid-column: 1 / -1; }
@@ -604,3 +604,53 @@ p { margin: 0; }
 .erro404 h1 { font-size: clamp(1.8rem, 4vw, 2.6rem); margin-top: 8px; }
 .erro404 p:not(.erro404__codigo) { margin: 14px auto 0; color: var(--muted); max-width: 46ch; }
 .erro404__acoes { margin-top: 28px; display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
+
+/* Botão pausar/continuar do carrossel (fica junto dos marcadores) */
+.news__dots .news__pausa {
+  width: 32px; height: 32px; margin-right: 6px; border-radius: 50%;
+  background: var(--white); border: 2px solid var(--petrol); color: var(--petrol);
+  display: grid; place-items: center; align-self: center;
+}
+.news__dots .news__pausa:hover { background: var(--petrol); color: var(--white); }
+.news__dots .news__pausa svg { width: 14px; height: 14px; fill: currentColor; }
+.news__dots { align-items: center; }
+
+/* Depoimentos */
+.depoimentos { padding: clamp(64px, 9vw, 112px) 0; }
+.depoimentos__lista { list-style: none; margin: 0 0 28px; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; }
+.depoimento { background: var(--white); border: 1px solid var(--line); border-radius: 18px; padding: 24px; display: flex; flex-direction: column; gap: 14px; }
+.depoimento blockquote { margin: 0; font-size: 1.05rem; line-height: 1.55; }
+.depoimento blockquote::before { content: "“"; display: block; font: 800 3rem/0.6 var(--display); color: var(--lime); margin-bottom: 10px; }
+.depoimento__autor { margin-top: auto; color: var(--muted); font-size: .95rem; }
+.depoimento__autor strong { color: var(--ink); }
+
+/* Páginas por cidade */
+.cidade__topo { background: var(--petrol); color: var(--white); padding: clamp(40px, 7vw, 80px) 0 clamp(48px, 8vw, 88px); }
+.migalhas { font-size: .9rem; color: rgba(255,255,255,.75); margin-bottom: 18px; }
+.migalhas a { color: var(--white); }
+.cidade__topo h1 { font-size: clamp(2.2rem, 5.5vw, 3.8rem); font-weight: 800; letter-spacing: -0.03em; max-width: 16ch; }
+.cidade__lead { margin-top: 18px; font-size: 1.15rem; max-width: 52ch; color: rgba(255,255,255,.88); }
+.cidade__acoes { margin-top: 28px; display: flex; flex-wrap: wrap; gap: 12px; }
+.cidade__passos { background: var(--white); padding: clamp(56px, 8vw, 96px) 0; }
+.cidade__passos ol { list-style: none; margin: 28px 0 0; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; counter-reset: passo; }
+.cidade__passos li { counter-increment: passo; background: var(--mist); border-radius: 18px; padding: 22px; }
+.cidade__passos li::before { content: counter(passo); display: grid; place-items: center; width: 36px; height: 36px; margin-bottom: 12px; border-radius: 50%; background: var(--petrol); color: var(--white); font-weight: 700; }
+.cidade__passos strong { display: block; }
+.cidade__outras { padding: clamp(48px, 7vw, 80px) 0; }
+.cidade__outras ul { list-style: none; margin: 20px 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 10px; }
+.cidade__outras a { display: inline-block; padding: 10px 16px; border-radius: 999px; background: var(--white); border: 1px solid var(--line); text-decoration: none; font-weight: 600; color: var(--petrol); }
+.cidade__outras a:hover { border-color: var(--petrol); }
+/* etiquetas de cidades da página inicial viram links */
+.coverage__cidades a { color: inherit; text-decoration: none; }
+.coverage__cidades a:hover { text-decoration: underline; }
+@media (max-width: 720px) { .cidade__passos ol { grid-template-columns: 1fr; } }
+
+/* Marcadores do carrossel: área de toque de 24px (acessibilidade), mantendo o ponto pequeno */
+.news__dots button:not(.news__pausa) { width: 24px; height: 24px; background: none; position: relative; }
+.news__dots button:not(.news__pausa)::before {
+  content: ""; position: absolute; left: 50%; top: 50%; width: 10px; height: 10px; border-radius: 999px;
+  transform: translate(-50%, -50%); background: var(--line); transition: width .2s, background-color .2s;
+}
+.news__dots button[aria-current="true"] { width: 36px; background: none; }
+.news__dots button[aria-current="true"]::before { width: 28px; background: var(--petrol); }
+.news__dots { gap: 2px; }

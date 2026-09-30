@@ -12,6 +12,9 @@ Site institucional da **WebNet Conexão em Alta Velocidade**, provedor de intern
 | `config.js` | WhatsApp, apps, Área do Cliente, rodapé, aviso no topo, teste de velocidade, estatísticas, planos empresariais e SVA de e-books |
 | `comum.js` | Itens comuns às páginas: menu, rodapé, WhatsApp flutuante, aviso no topo e estatísticas |
 | `termos.html`, `404.html` | Termos de Uso e página de erro 404 |
+| `internet-fibra-*.html` | Uma página por cidade atendida (geradas por `gerar-cidades.js`) |
+| `gerar-cidades.js` | Gera as páginas por cidade e o `sitemap.xml`: rode `node gerar-cidades.js` ao mudar planos ou cidades |
+| `vlibras.js` | Inicia o tradutor de Libras (VLibras) |
 | `fontes/` | Fonte Roboto servida pelo próprio site (licença SIL OFL) |
 | `robots.txt`, `sitemap.xml` | Orientação para buscadores (endereço preenchido no deploy) |
 | `script.js` | Planos, preços e CEPs atendidos (configuração no início do arquivo) |

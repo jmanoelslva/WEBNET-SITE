@@ -28,6 +28,21 @@ const AVISO = {
   ate: "2026-10-02T16:00",   // data e hora de Brasília em que o aviso deixa de aparecer ("" = sem prazo)
 };
 
+// ===== Acessibilidade =====
+// Tradutor de Libras do governo federal (VLibras): botão azul na lateral da tela.
+const VLIBRAS_ATIVO = true;
+
+// ===== Depoimentos =====
+// Use SOMENTE depoimentos reais, com autorização de quem escreveu. Com ativo: false (ou lista vazia),
+// a seção não aparece. O link de avaliação leva à página da WebNet no Google Maps.
+const DEPOIMENTOS = {
+  ativo: false,
+  avaliarGoogleUrl: "",   // ex.: link "Escrever avaliação" do Perfil da Empresa no Google
+  lista: [
+    // { nome: "Nome do cliente", cidade: "Propriá", texto: "Depoimento autorizado pelo cliente." },
+  ],
+};
+
 // ===== Teste de velocidade =====
 // Endereço do teste de velocidade. Se instalar o LibreSpeed no servidor da WebNet
 // (veja DEPLOY.md), troque por ele, ex.: "https://velocidade.webnetse.com.br".

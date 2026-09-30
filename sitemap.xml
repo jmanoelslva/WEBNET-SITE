@@ -3,4 +3,10 @@
   <url><loc>__SITE_URL__/</loc><lastmod>__DATA__</lastmod><priority>1.0</priority></url>
   <url><loc>__SITE_URL__/privacidade.html</loc><lastmod>__DATA__</lastmod><priority>0.3</priority></url>
   <url><loc>__SITE_URL__/termos.html</loc><lastmod>__DATA__</lastmod><priority>0.3</priority></url>
+  <url><loc>__SITE_URL__/internet-fibra-propria.html</loc><lastmod>__DATA__</lastmod><priority>0.8</priority></url>
+  <url><loc>__SITE_URL__/internet-fibra-amparo-de-sao-francisco.html</loc><lastmod>__DATA__</lastmod><priority>0.8</priority></url>
+  <url><loc>__SITE_URL__/internet-fibra-cedro-de-sao-joao.html</loc><lastmod>__DATA__</lastmod><priority>0.8</priority></url>
+  <url><loc>__SITE_URL__/internet-fibra-malhada-dos-bois.html</loc><lastmod>__DATA__</lastmod><priority>0.8</priority></url>
+  <url><loc>__SITE_URL__/internet-fibra-sao-francisco.html</loc><lastmod>__DATA__</lastmod><priority>0.8</priority></url>
+  <url><loc>__SITE_URL__/internet-fibra-telha.html</loc><lastmod>__DATA__</lastmod><priority>0.8</priority></url>
 </urlset>

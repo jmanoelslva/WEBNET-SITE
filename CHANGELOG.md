@@ -7,6 +7,24 @@ e este projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR
 
 ## [Unreleased]
 
+## [0.5.0] - 2026-09-30
+
+### Adicionado
+
+- Uma página por cidade atendida (`internet-fibra-<cidade>.html`), com planos, passo a passo, perguntas frequentes e dados estruturados; as cidades da faixa de cobertura viram links para elas. Geradas por `gerar-cidades.js`, que também atualiza o `sitemap.xml`.
+- Tradutor de Libras (VLibras) em todas as páginas (`VLIBRAS_ATIVO` em `config.js`).
+- Estrutura de depoimentos de clientes e link "Avalie a WebNet no Google" (`DEPOIMENTOS` em `config.js`), desligada até haver depoimentos reais autorizados.
+- Botão pausar/continuar no carrossel.
+- Cabeçalho de segurança Content-Security-Policy (CSP) e, na instalação definitiva, HSTS.
+
+### Alterado
+
+- Carrossel continua trocando sozinho com "animações reduzidas" no sistema (sem deslizar) e volta a trocar alguns segundos depois de um toque ou clique.
+
+### Corrigido
+
+- Acessibilidade (Lighthouse 90 → 100): papel ARIA dos slides, contraste do aviso do pré-cadastro e área de toque dos marcadores do carrossel.
+
 ## [0.4.0] - 2026-09-30
 
 ### Adicionado
@@ -129,7 +147,8 @@ e este projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR
 - Dados da empresa no rodapé: razão social, CNPJ 13.094.761/0001-00, endereço na Praça Fausto Cardoso, 90, Propriá-SE, e e-mail gerente@webnetprovedor.com.
 - Layout responsivo para celular, tablet e computador, com navegação por teclado e suporte a movimento reduzido.
 
-[Unreleased]: https://github.com/jmanoelslva/WEBNET-SITE/compare/v0.4.0...HEAD
+[Unreleased]: https://github.com/jmanoelslva/WEBNET-SITE/compare/v0.5.0...HEAD
+[0.5.0]: https://github.com/jmanoelslva/WEBNET-SITE/compare/v0.4.0...v0.5.0
 [0.4.0]: https://github.com/jmanoelslva/WEBNET-SITE/compare/v0.3.0...v0.4.0
 [0.3.0]: https://github.com/jmanoelslva/WEBNET-SITE/compare/v0.2.1...v0.3.0
 [0.2.1]: https://github.com/jmanoelslva/WEBNET-SITE/compare/v0.2.0...v0.2.1
